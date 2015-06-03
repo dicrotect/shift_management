@@ -1,10 +1,12 @@
 body {
   background-color:#FFF6D9;
+  font-family: sans-serif;
 }
 
 h1 {
-  color: #B0274F;
+  color: #EA512A;
   text-align: center;
+  font-family: sans-serif;
 }
 
 table {
@@ -14,6 +16,7 @@ table {
   border-spacing: 0;
   text-align: center;
   background-color: #FFE8FF;
+  font-family: sans-serif;
 }
 
 td {
@@ -29,6 +32,7 @@ td {
 }
 tr {
   vertical-align: top;
+  font-family: sans-serif;
 }
 
 img {

@@ -6,10 +6,19 @@
   $time2 = range(0,24);
   //sとkの配列を組み合わせる
   //スーパーグローバル変数$_POST
-if($_SERVER['REQUEST_METHOD']=='POST') {
+if($_SERVER['REQUEST_METHOD']=='POST' &&
+   $_POST["person"] !==  "" ) {
   //送信（POST）されているか
   //var_dump($_POST);
   //送信されたvalueを受け取る
+}
+if($_POST["person"] == "" ) {
+  echo "<p1>";
+  echo "オーナーにシフトが送信されていません。<br>";
+  echo "</p1>";
+  echo "<p1>名前を入力してください</p1></br>";
+} else {
+  echo "<p2>オーナーに".$_POST["person"]."さんのシフトが送信されました。</p2>";
 }
 $youbi = array(0, 0, 0, 0, 0, 0, 0 );
 for($b=0 ;$b < 7; $b++) {
@@ -29,6 +38,8 @@ for($y=0; $y <= $count;$y++ ){
   //ファイルにデータを保存したい
   $contents = $contents.$youbi[$y];
 }
+
+if($_POST["person"] !== "") {
 if(is_writable($file)) {
   if(!$fp = fopen($file, "a")){
     echo "could not open";
@@ -43,6 +54,7 @@ if(is_writable($file)) {
 } else  {
   echo "not writable";
   exit;
+}
 }
 ?>
 
@@ -183,7 +195,16 @@ if(is_writable($file)) {
   </p>
 
   <p><input type='submit' value='作成する'></p>
+  <?php
+  // $name = $_POST["person"];
+  // $len = mb_strlen($name,"UTF-8");
+  //
+  // if ($lem == 0){
+  //
+  // }
 
+  ?>
+  </p>
 </form>
 
 </body>
