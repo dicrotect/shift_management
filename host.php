@@ -65,8 +65,9 @@ for($y=0; $y < $count; $y++ ) {
           } else {
             echo '　';
           }
-          //$worker = array("たかけん", "いのうえ", "ふじた", "おりまー");
-          $pic = array("たかけん" => "./takakura.png","いのうえ"　=> "./inoue.jpeg","ふじた" =>"./huzita.jpeg","おりまー" => "./olimer.jpeg");
+        //  $worker = array("たかけん", "いのうえ", "ふじた", "おりまー");
+          $pic = array("たかけん" => "./takakura.png","いのうえ"=> "./inoue.jpeg","ふじた" =>"./huzita.jpeg","おりまー" => "./olimer.jpeg");
+          //$pic = array("./takakura.png","./inoue.jpeg","./huzita.jpeg","./olimer.jpeg");
           for ($j = 0; $j < $count; $j++) {
             //スタートでポストされた値がtimeの何番目位置番号を保存する
             //スタートでポストされた値がtime配列のjの位置に保存されていますか？
@@ -83,7 +84,7 @@ for($y=0; $y < $count; $y++ ) {
             }
             //変化する値を左側におく
             if( $i - 1 >= $starttime && $i - 1 < $endtime  && $persondata[$j][3][$b-1] == 1 && $b > 0) {
-              print <img src=$pic[$persondata[$j][0]]>"\n";
+               echo "<img src='{$pic[$persondata[$j][0]]}'>\n";
               // if($persondata[$j][0] == $worker[0]) {
               //   echo "<img src='$pic[0]'>\n";
               // } elseif ($persondata[$j][0] == $worker[1]) {
