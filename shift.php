@@ -29,34 +29,35 @@ for($y=0; $y <= $count;$y++ ){
   //ファイルにデータを保存したい
   $contents = $contents.$youbi[$y];
 }
-$worker = array("たかけん", "いのうえ", "ふじた", "おりまー");
-for ($w=0; $w <count($worker) ; $w++) {
-if($_POST["person"] == $worker[$w]) {
-if(is_writable($file)) {
-  if(!$fp = fopen($file, "a")){
-    echo "could not open";
-    exit;
-  }
-  if(fwrite($fp, $contents."\n") === false){
-    echo "could not write";
-    exit;
-  }
-  fclose($fp);
+// var_dump($contents);
+// $worker = array("たかけん", "いのうえ", "ふじた", "おりまー");
+// for ($w=0; $w <count($worker) ; $w++) {
+  //if($_POST["person"] == $worker[$w]) {
+    if(is_writable($file)) {
+      if(!$fp = fopen($file, "a")){
+        echo "could not open";
+        exit;
+      }
+      if(fwrite($fp, $contents."\n") === false){
+        echo "could not write";
+        exit;
+      }
+      fclose($fp);
 
-} else  {
-  echo "not writable";
-  exit;
-}
-}
-}
-if($_POST["person"] == "" ) {
-  echo "<p1>";
-  echo "オーナーにシフトが送信されていません。<br>";
-  echo "</p1>";
-  echo "<p1>名前を入力してください</p1></br>";
-} else {
-  echo "<p2>オーナーに".$_POST["person"]."さんのシフトが送信されました。</p2>";
-}
+    } else {
+      echo "not writable";
+      exit;
+    }
+  //}
+//}
+// if($_POST["person"] == "" ) {
+//   echo "<p1>";
+//   echo "オーナーにシフトが送信されていません。<br>";
+//   echo "</p1>";
+//   echo "<p1>名前を入力してください</p1></br>";
+// } else {
+//   echo "<p2>オーナーに".$_POST["person"]."さんのシフトが送信されました。</p2>";
+// }
 
 ?>
 
@@ -128,73 +129,78 @@ if($_POST["person"] == "" ) {
   </table>
   <form action='' method='post'>
   <!-- valueを送信 (POSTする)-->
-  氏名：<input type='text' name='person' />
+  <!-- 氏名：<input type='text' name='person' /> -->
+  氏名
+  <select name='person'>
+    <option value='たかけん'>たかけん</option>
+    <option value='いのうえ'>いのうえ</option>
+    <option value='ふじた'>ふじた</option>
+    <option value='おりまー'>おりまー</option>
+  </select><br>
+  希望の曜日は？
   <p>
-    希望の曜日は？
-      <p>
-        <input type='checkbox' name='c1' value='1'>Mon
-        <input type='checkbox' name='c2' value='2'>Tue
-        <input type='checkbox' name='c3' value='3'>Wed
-        <input type='checkbox' name='c4' value='4'>Tur
-        <input type='checkbox' name='c5' value='5'>Fri
-        <input type='checkbox' name='c6' value='6'>Sat
-        <input type='checkbox' name='c7' value='7'>Sun
-      </p>
-    何時から働きますか？
-    <select name='start'>
-      <option value='6'>6</option>
-      <option value='7'>7</option>
-      <option value='8'>8</option>
-      <option value='9'>9</option>
-      <option value='10'>10</option>
-      <option value='11'>11</option>
-      <option value='12'>12</option>
-      <option value='13'>13</option>
-      <option value='14'>14</option>
-      <option value='15'>15</option>
-      <option value='16'>16</option>
-      <option value='17'>17</option>
-      <option value='18'>18</option>
-      <option value='19'>19</option>
-      <option value='20'>20</option>
-      <option value='21'>21</option>
-      <option value='22'>22</option>
-      <option value='23'>23</option>
-      <option value='24'>24</option>
-      <option value='1'>1</option>
-      <option value='2'>2</option>
-      <option value='3'>3</option>
-      <option value='4'>4</option>
-      <option value='5'>5</option>
-    </select>
-    何時まで働きますか？
-    <select name='end'>
-      <option value='6'>6</option>
-      <option value='7'>7</option>
-      <option value='8'>8</option>
-      <option value='9'>9</option>
-      <option value='10'>10</option>
-      <option value='11'>11</option>
-      <option value='12'>12</option>
-      <option value='13'>13</option>
-      <option value='14'>14</option>
-      <option value='15'>15</option>
-      <option value='16'>16</option>
-      <option value='17'>17</option>
-      <option value='18'>18</option>
-      <option value='19'>19</option>
-      <option value='20'>20</option>
-      <option value='21'>21</option>
-      <option value='22'>22</option>
-      <option value='23'>23</option>
-      <option value='24'>24</option>
-      <option value='1'>1</option>
-      <option value='2'>2</option>
-      <option value='3'>3</option>
-      <option value='4'>4</option>
-      <option value='5'>5</option>
-    </select>
+    <input type='checkbox' name='c1' value='1'>Mon
+    <input type='checkbox' name='c2' value='2'>Tue
+    <input type='checkbox' name='c3' value='3'>Wed
+    <input type='checkbox' name='c4' value='4'>Tur
+    <input type='checkbox' name='c5' value='5'>Fri
+    <input type='checkbox' name='c6' value='6'>Sat
+    <input type='checkbox' name='c7' value='7'>Sun
   </p>
+  何時から働きますか？
+  <select name='start'>
+    <option value='6'>6</option>
+    <option value='7'>7</option>
+    <option value='8'>8</option>
+    <option value='9'>9</option>
+    <option value='10'>10</option>
+    <option value='11'>11</option>
+    <option value='12'>12</option>
+    <option value='13'>13</option>
+    <option value='14'>14</option>
+    <option value='15'>15</option>
+    <option value='16'>16</option>
+    <option value='17'>17</option>
+    <option value='18'>18</option>
+    <option value='19'>19</option>
+    <option value='20'>20</option>
+    <option value='21'>21</option>
+    <option value='22'>22</option>
+    <option value='23'>23</option>
+    <option value='24'>24</option>
+    <option value='1'>1</option>
+    <option value='2'>2</option>
+    <option value='3'>3</option>
+    <option value='4'>4</option>
+    <option value='5'>5</option>
+  </select>
+  何時まで働きますか？
+  <select name='end'>
+    <option value='6'>6</option>
+    <option value='7'>7</option>
+    <option value='8'>8</option>
+    <option value='9'>9</option>
+    <option value='10'>10</option>
+    <option value='11'>11</option>
+    <option value='12'>12</option>
+    <option value='13'>13</option>
+    <option value='14'>14</option>
+    <option value='15'>15</option>
+    <option value='16'>16</option>
+    <option value='17'>17</option>
+    <option value='18'>18</option>
+    <option value='19'>19</option>
+    <option value='20'>20</option>
+    <option value='21'>21</option>
+    <option value='22'>22</option>
+    <option value='23'>23</option>
+    <option value='24'>24</option>
+    <option value='1'>1</option>
+    <option value='2'>2</option>
+    <option value='3'>3</option>
+    <option value='4'>4</option>
+    <option value='5'>5</option>
+  </select>
 
   <p><input type='submit' value='作成する'></p>
   <?php

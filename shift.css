@@ -49,3 +49,6 @@ p2 {
   color: #06C263;
   font-family: sans-serif;
 }
+select {
+  font-size: 200px;
+}
