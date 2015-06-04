@@ -3,22 +3,13 @@
   $s = range(6, 24);
   $k = range(1, 5);
   $time = array_merge($s,$k);
-  $time2 = range(0,24);
   //sとkの配列を組み合わせる
   //スーパーグローバル変数$_POST
-if($_SERVER['REQUEST_METHOD']=='POST' &&
-   $_POST["person"] !==  "" ) {
+
+if( $_SERVER['REQUEST_METHOD']=='POST') {
   //送信（POST）されているか
   //var_dump($_POST);
   //送信されたvalueを受け取る
-}
-if($_POST["person"] == "" ) {
-  echo "<p1>";
-  echo "オーナーにシフトが送信されていません。<br>";
-  echo "</p1>";
-  echo "<p1>名前を入力してください</p1></br>";
-} else {
-  echo "<p2>オーナーに".$_POST["person"]."さんのシフトが送信されました。</p2>";
 }
 $youbi = array(0, 0, 0, 0, 0, 0, 0 );
 for($b=0 ;$b < 7; $b++) {
@@ -38,8 +29,9 @@ for($y=0; $y <= $count;$y++ ){
   //ファイルにデータを保存したい
   $contents = $contents.$youbi[$y];
 }
-
-if($_POST["person"] !== "") {
+$worker = array("たかけん", "いのうえ", "ふじた", "おりまー");
+for ($w=0; $w <count($worker) ; $w++) {
+if($_POST["person"] == $worker[$w]) {
 if(is_writable($file)) {
   if(!$fp = fopen($file, "a")){
     echo "could not open";
@@ -56,6 +48,16 @@ if(is_writable($file)) {
   exit;
 }
 }
+}
+if($_POST["person"] == "" ) {
+  echo "<p1>";
+  echo "オーナーにシフトが送信されていません。<br>";
+  echo "</p1>";
+  echo "<p1>名前を入力してください</p1></br>";
+} else {
+  echo "<p2>オーナーに".$_POST["person"]."さんのシフトが送信されました。</p2>";
+}
+
 ?>
 
 <!DOCTYPE html>
