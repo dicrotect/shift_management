@@ -22,7 +22,7 @@ $count =count($contents);
 for($y=0; $y < $count; $y++ ) {
   $persondata[] = explode("　", $contents[$y]);
 }
-//var_dump($persondata[0]);
+var_dump($persondata[0]);
 ?>
 <!DOCTYPE html>
 <html lang ='ja'>
