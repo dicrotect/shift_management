@@ -48,24 +48,6 @@ if(is_writable($file)) {
   exit;
 }
 
-// if(isset($_POST["person"]) && file_exists($_POST["person"])){
-//   $pf = fopen($_POST["person"],"w");
-//   fputs($pf,$_POST["start"], $_POST["end"]);
-//   fclose($pf);
-//
-// var_dump($pf);
-
-  //}
-//}
-// if($_POST["person"] == "" ) {
-//   echo "<p1>";
-//   echo "オーナーにシフトが送信されていません。<br>";
-//   echo "</p1>";
-//   echo "<p1>名前を入力してください</p1></br>";
-// } else {
-//   echo "<p2>オーナーに".$_POST["person"]."さんのシフトが送信されました。</p2>";
-// }
-
 ?>
 
 <!DOCTYPE html>

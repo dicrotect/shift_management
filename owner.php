@@ -20,62 +20,51 @@ for($b=0 ;$b < 7; $b++) {
 
 $file = "file.dat";
 $contents = $_POST["person"]."　".$_POST["start"]."　".$_POST["end"]."　";
-
 $count =count($youbi);
 for($y=0; $y <= $count;$y++ ){
-  //contentsにyoubiをふくめたい
-  //countで７回回る宣言
-  //７回youbiの配列から値をとりだして、ファイルに保存するデータを作る
-  //ファイルにデータを保存したい
+  // contentsにyoubiをふくめたい
+  // countで７回回る宣言
+  // ７回youbiの配列から値をとりだして、ファイルに保存するデータを作る
+  // ファイルにデータを保存したい
   $contents = $contents.$youbi[$y];
-}
-// var_dump($contents);
-// $worker = array("たかけん", "いのうえ", "ふじた", "おりまー");
-// for ($w=0; $w <count($worker) ; $w++) {
-  //if($_POST["person"] == $worker[$w]) {
-if(is_writable($file)) {
-  if(!$fp = fopen($file, "a")){
-    echo "could not open";
-    exit;
-  }
-  if(fwrite($fp, $contents."\n") === false){
-    echo "could not write";
-    exit;
-  }
-  fclose($fp);
-
-} else {
-  echo "not writable";
-  exit;
 }
 
 $file = "file.dat";
 $contents = file($file);
+$person = $_POST["person"];
 //var_dump($contents);
 //コンテンツが存在するだけpersndataの配列をつくりたい
 //$persondata配列contentsと同じ文の配列の数
-$count =count($contents);
+for ($j = 0; $j < $count; $j++) {
+  if (strstr($contents[$j], $person) != false) {
+    unset($contents[$j]);
+  }
+}
+$contents = array_merge($contents);
+$count = count($contents);
+var_dump($contents);
 for($y=0; $y < $count; $y++ ) {
   $persondata[] = explode("　", $contents[$y]);
 }
-
-// if(isset($_POST["person"]) && file_exists($_POST["person"])){
-//   $pf = fopen($_POST["person"],"w");
-//   fputs($pf,$_POST["start"], $_POST["end"]);
-//   fclose($pf);
-//
-// var_dump($pf);
-
-  //}
-//}
-// if($_POST["person"] == "" ) {
-//   echo "<p1>";
-//   echo "オーナーにシフトが送信されていません。<br>";
-//   echo "</p1>";
-//   echo "<p1>名前を入力してください</p1></br>";
-// } else {
-//   echo "<p2>オーナーに".$_POST["person"]."さんのシフトが送信されました。</p2>";
-// }
+// $worker = array("たかけん", "いのうえ", "ふじた", "おりまー");
+// for ($w=0; $w <count($worker) ; $w++) {
+  //if($_POST["person"] == $worker[$w]) {
+if(is_writable($file)) {
+  if(!$fp = fopen($file, "w")){
+    echo "could not open";
+    exit;
+  }
+  for($m = 0; $m < $count; $m++ ){
+    if(fwrite($fp, $contents[$m]) === false){
+      echo "could not write";
+      exit;
+    }
+  }
+  fclose($fp);
+} else {
+  echo "not writable";
+  exit;
+}
 
 ?>
 
@@ -160,6 +149,7 @@ for($y=0; $y < $count; $y++ ) {
             }
           }
 
+
            ?> </tb>
 
         <?php endfor; ?>
@@ -175,73 +165,9 @@ for($y=0; $y < $count; $y++ ) {
     <option value='いのうえ'>いのうえ</option>
     <option value='ふじた'>ふじた</option>
     <option value='おりまー'>おりまー</option>
-  </select><br>
-  変更する曜日は？
-  <p>
-    <input type='checkbox' name='c1' value='1'>Mon
-    <input type='checkbox' name='c2' value='2'>Tue
-    <input type='checkbox' name='c3' value='3'>Wed
-    <input type='checkbox' name='c4' value='4'>Tur
-    <input type='checkbox' name='c5' value='5'>Fri
-    <input type='checkbox' name='c6' value='6'>Sat
-    <input type='checkbox' name='c7' value='7'>Sun
-  </p>
-  出勤時間を変更します
-  <select name='start'>
-    <option value='6'>6</option>
-    <option value='7'>7</option>
-    <option value='8'>8</option>
-    <option value='9'>9</option>
-    <option value='10'>10</option>
-    <option value='11'>11</option>
-    <option value='12'>12</option>
-    <option value='13'>13</option>
-    <option value='14'>14</option>
-    <option value='15'>15</option>
-    <option value='16'>16</option>
-    <option value='17'>17</option>
-    <option value='18'>18</option>
-    <option value='19'>19</option>
-    <option value='20'>20</option>
-    <option value='21'>21</option>
-    <option value='22'>22</option>
-    <option value='23'>23</option>
-    <option value='24'>24</option>
-    <option value='1'>1</option>
-    <option value='2'>2</option>
-    <option value='3'>3</option>
-    <option value='4'>4</option>
-    <option value='5'>5</option>
-  </select>
-  退勤時間を変更します
-  <select name='end'>
-    <option value='6'>6</option>
-    <option value='7'>7</option>
-    <option value='8'>8</option>
-    <option value='9'>9</option>
-    <option value='10'>10</option>
-    <option value='11'>11</option>
-    <option value='12'>12</option>
-    <option value='13'>13</option>
-    <option value='14'>14</option>
-    <option value='15'>15</option>
-    <option value='16'>16</option>
-    <option value='17'>17</option>
-    <option value='18'>18</option>
-    <option value='19'>19</option>
-    <option value='20'>20</option>
-    <option value='21'>21</option>
-    <option value='22'>22</option>
-    <option value='23'>23</option>
-    <option value='24'>24</option>
-    <option value='1'>1</option>
-    <option value='2'>2</option>
-    <option value='3'>3</option>
-    <option value='4'>4</option>
-    <option value='5'>5</option>
   </select>
 
-  <p><input type='submit' value='変更を送信する'></p>
+  <p><input type='submit' value='シフトを削除する'></p>
   <?php
   // $name = $_POST["person"];
   // $len = mb_strlen($name,"UTF-8");
