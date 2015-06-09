@@ -8,63 +8,62 @@
 
 if( $_SERVER['REQUEST_METHOD']=='POST') {
   //送信（POST）されているか
-  //var_dump($_POST);
   //送信されたvalueを受け取る
 }
-$youbi = array(0, 0, 0, 0, 0, 0, 0 );
-for($b=0 ;$b < 7; $b++) {
-  if(isset($_POST['c'.($b+1)]) ) {
-    $youbi[$b] = 1;
-  }
-}
-
-$file = "file.dat";
-$contents = $_POST["person"]."　".$_POST["start"]."　".$_POST["end"]."　";
-$count =count($youbi);
-for($y=0; $y <= $count;$y++ ){
-  // contentsにyoubiをふくめたい
-  // countで７回回る宣言
-  // ７回youbiの配列から値をとりだして、ファイルに保存するデータを作る
-  // ファイルにデータを保存したい
-  $contents = $contents.$youbi[$y];
-}
-
-$file = "file.dat";
-$contents = file($file);
-$person = $_POST["person"];
-//var_dump($contents);
-//コンテンツが存在するだけpersndataの配列をつくりたい
-//$persondata配列contentsと同じ文の配列の数
-for ($j = 0; $j < $count; $j++) {
-  if (strstr($contents[$j], $person) != false) {
-    unset($contents[$j]);
-  }
-}
-$contents = array_merge($contents);
-$count = count($contents);
-var_dump($contents);
-for($y=0; $y < $count; $y++ ) {
-  $persondata[] = explode("　", $contents[$y]);
-}
-// $worker = array("たかけん", "いのうえ", "ふじた", "おりまー");
-// for ($w=0; $w <count($worker) ; $w++) {
-  //if($_POST["person"] == $worker[$w]) {
-if(is_writable($file)) {
-  if(!$fp = fopen($file, "w")){
-    echo "could not open";
-    exit;
-  }
-  for($m = 0; $m < $count; $m++ ){
-    if(fwrite($fp, $contents[$m]) === false){
-      echo "could not write";
-      exit;
+  $youbi = array(0, 0, 0, 0, 0, 0, 0 );
+  for($b=0 ;$b < 7; $b++) {
+    if(isset($_POST['c'.($b+1)]) ) {
+      $youbi[$b] = 1;
     }
   }
-  fclose($fp);
-} else {
-  echo "not writable";
-  exit;
-}
+
+  $file = "file.dat";
+  $contents = $_POST["person"]."　".$_POST["start"]."　".$_POST["end"]."　";
+  $count =count($youbi);
+  for($y=0; $y <= $count;$y++ ){
+    // contentsにyoubiをふくめたい
+    // countで７回回る宣言
+    // ７回youbiの配列から値をとりだして、ファイルに保存するデータを作る
+    // ファイルにデータを保存したい
+    $contents = $contents.$youbi[$y];
+  }
+
+  $file = "file.dat";
+  $contents = file($file);
+  $person = $_POST["person"];
+  //var_dump($contents);
+  //コンテンツが存在するだけpersndataの配列をつくりたい
+  //$persondata配列contentsと同じ文の配列の数
+  for ($j = 0; $j < $count; $j++) {
+    if (strstr($contents[$j], $person) != false) {
+      unset($contents[$j]);
+    }
+  }
+  $contents = array_merge($contents);
+  $count = count($contents);
+  var_dump($contents);
+  for($y=0; $y < $count; $y++ ) {
+    $persondata[] = explode("　", $contents[$y]);
+  }
+  // $worker = array("たかけん", "いのうえ", "ふじた", "おりまー");
+  // for ($w=0; $w <count($worker) ; $w++) {
+    //if($_POST["person"] == $worker[$w]) {
+  if(is_writable($file)) {
+    if(!$fp = fopen($file, "w")){
+      echo "could not open";
+      exit;
+    }
+    for($m = 0; $m < $count; $m++ ){
+      if(fwrite($fp, $contents[$m]) === false){
+        echo "could not write";
+        exit;
+      }
+    }
+    fclose($fp);
+  } else {
+    echo "not writable";
+    exit;
+  }
 
 ?>
 
@@ -156,28 +155,28 @@ if(is_writable($file)) {
       </tr>
     <?php endfor; ?>
   </table>
-  <form action='' method='post'>
+  <form action='' method='post' enctype="multipart/form-data">
   <!-- valueを送信 (POSTする)-->
   <!-- 氏名：<input type='text' name='person' /> -->
-  氏名
+  シフトを変更したい従業員を選択してください
+  <br>
   <select name='person'>
+    <option value="従業員一覧">従業員</option>
     <option value='たかけん'>たかけん</option>
     <option value='いのうえ'>いのうえ</option>
     <option value='ふじた'>ふじた</option>
     <option value='おりまー'>おりまー</option>
   </select>
-
-  <p><input type='submit' value='シフトを削除する'></p>
-  <?php
-  // $name = $_POST["person"];
-  // $len = mb_strlen($name,"UTF-8");
-  //
-  // if ($lem == 0){
-  //
-  // }
-
-  ?>
-  </p>
+  <br>
+  <p1><input type='submit' value='シフトを削除する'></p1>
+  <br>
+  <br>
+  追加したい従業員を登録できます。
+  <br>
+  <p2><input type='text' value='ここに名前を入力' name='new'></p2>
+  <p3><input type="file" name="upfile"><p3>
+  <br>
+  <p4><input type='submit' value='登録する'></p4>
 </form>
 
 </body>
