@@ -1,48 +1,38 @@
 <?php
 
-$s = range(6, 24);
-$k = range(1, 5);
-$time = array_merge($s,$k);
-  //sとkの配列を組み合わせる
-  //スーパーグローバル変数$_POST
-if( $_SERVER['REQUEST_METHOD']=='POST') {
-  //送信（POST）されているか
-  //var_dump($_POST);
-  //送信されたvalueを受け取る
-}
-$youbi = array(0, 0, 0, 0, 0, 0, 0 );
-for($b=0 ;$b < 7; $b++) {
-  if(isset($_POST['c'.($b+1)]) ) {
-    $youbi[$b] = 1;
+$times = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5);
+
+$oneWeek = array(0, 0, 0, 0, 0, 0, 0);
+$hours = 24;
+$oneWeekDays = 7;
+//表に表示する曜日
+$weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
+
+//シフトに入っている曜日を判定
+for($i = 0; $i < $oneWeekDays; $i++) {
+  if(isset($_POST['c'.($i+1)])) {
+    $oneWeek[$i] = 1;
   }
 }
 
-$file = "file.dat";
-$contents = $_POST["person"]."　".$_POST["start"]."　".$_POST["end"]."　";
+$shiftTime = $_POST["person"].",".$_POST["start"].",".$_POST["end"].",";
 
-$count =count($youbi);
-for($y=0; $y <= $count;$y++ ){
-  //contentsにyoubiをふくめたい
-  //countで７回回る宣言
-  //７回youbiの配列から値をとりだして、ファイルに保存するデータを作る
-  //ファイルにデータを保存したい
-  $contents = $contents.$youbi[$y];
+//ファイルに書き込む形式に曜日情報を結合
+for($i = 0; $i < $oneWeekDays; $i++) {
+  $shiftTime = $shiftTime.$oneWeek[$i];
 }
-// var_dump($contents);
-// $worker = array("たかけん", "いのうえ", "ふじた", "おりまー");
-// for ($w=0; $w <count($worker) ; $w++) {
-  //if($_POST["person"] == $worker[$w]) {
-if(is_writable($file)) {
-  if(!$fp = fopen($file, "a")){
+
+//shift.datに$shiftTimeを書き込み
+if(is_writable("shift.dat") === true) {
+  $filePointer = fopen("shift.dat", "a");
+  if($filePointer === false) {
     echo "could not open";
     exit;
-  }
-  if(fwrite($fp, $contents."\n") === false){
+  } elseif(fwrite($filePointer, $shiftTime."\n") === false) {
     echo "could not write";
     exit;
   }
-  fclose($fp);
-
+  fclose($filePointer);
 } else {
   echo "not writable";
   exit;
@@ -51,74 +41,55 @@ if(is_writable($file)) {
 ?>
 
 <!DOCTYPE html>
-<html lang ='ja'>
+<html lang='ja'>
 <head>
-  <meta charaset = 'UTF-8'>
+  <meta charaset='UTF-8'>
   <title>希望シフトを入力しよう</title>
   <link rel="stylesheet" href="shift.css">
 </head>
 <body>
   <h1>希望の基本シフトを入力してください</h1>
   <table>
-    <?php for($b = 0; $b<8 ;$b++): ?>
+    <?php
+      //週の曜日の７行+時間帯の表示の１行を表示させるため<=条件式とする
+      for($i = 0; $i <= $oneWeekDays; $i++):
+    ?>
       <tr>
         <?php
-         for($i = 0; $i<25; $i++): ?>
+          //１日24時間分の列+曜日の表示の１列を表示させるため<=条件式とする
+          for($j = 0; $j <= $hours; $j++):
+        ?>
           <td>
-          <?php
-          if ($i == 0 && $b == 0 ){
-            echo '　';
-          } elseif ($i < 20  && $b == 0) {
-            echo $s[$i - 1];
-            //[i-1]がsの配列の添え字
-            //s配列のi-1番目を抽出
-          } elseif ($b == 0) {
-            echo $k[$i - 20];
-          } elseif ($i == 0 && $b == 1) {
-            echo '月';
-          } elseif ($i == 0 && $b == 2) {
-            echo '火';
-          } elseif ($i == 0 && $b == 3) {
-            echo '水';
-          } elseif ($i == 0 && $b == 4) {
-            echo '木';
-          } elseif ($i == 0 && $b == 5) {
-            echo '金';
-          } elseif ($i == 0 && $b == 6) {
-            echo '土';
-          } elseif ($i == 0 && $b == 7) {
-            echo '日';
-          } else {
-            echo '　';
-          }
+            <?php
+              //表に曜日と時間を表示
+              if ($j > 0 && $i == 0) {
+                echo $times[$j-1];
+              } elseif ($j == 0 && $i > 0) {
+                echo $weekJpNames[$i-1];
+              } else {
+                echo '　';
+              }
+              //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
+              for ($k = 0; $k < $hours; $k++) {
+                if ($times[$k] == $_POST['start']) {
+                  $startTime = $k;
+                }
+                if ($times[$k] == $_POST['end']) {
+                  $endTime = $k;
+                }
+              }
+              //開始時間から終了時間とシフトに入る曜日に◯を出力
+              if ($i > 0 && $j - 1 >= $startTime && $j - 1 <= $endTime  && $i == $_POST['c'.$i] ) {
+                echo '◯';
+              }
+             ?>
+           </tb>
 
-          for ($j = 0; $j < 25; $j++) {
-            //スタートでポストされた値がtimeの何番目位置番号を保存する
-            //スタートでポストされた値がtime配列のjの位置に保存されていますか？
-            //timeの添字がj（time配列のj番目）
-            //timeのj番目のことをsatarttimeに保存します
-            if ( $time[$j] == $_POST['start'] ) {
-            //右のものを左に入れる
-              $starttime = $j;
-            }
-            if ($time[$j] == $_POST['end'] ) {
-              $endtime = $j;
-            }
-          }
-          //変化する値を左側におく
-          if ( $i - 1 >= $starttime && $i - 1 <= $endtime  && $b == $_POST['c'.$b] && $b > 0) {
-            echo '◯';
-          }
-
-           ?> </tb>
-
-        <?php endfor; ?>
-      </tr>
+      <?php endfor; ?>
+    </tr>
     <?php endfor; ?>
   </table>
   <form action='' method='post'>
-    <!-- valueを送信 (POSTする)-->
-    <!-- 氏名：<input type='text' name='person' /> -->
     氏名
     <select name='person'>
       <option value='たかけん'>たかけん</option>

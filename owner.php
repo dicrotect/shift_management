@@ -29,6 +29,7 @@ if( $_SERVER['REQUEST_METHOD']=='POST') {
   }
 
   $file = "file.dat";
+  $worker = "worker.dat"
   $contents = file($file);
   $person = $_POST["person"];
   //var_dump($contents);
