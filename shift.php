@@ -14,14 +14,14 @@ for($i = 0; $i < $oneWeekDays; $i++) {
   }
 }
 
-$shiftTime = $_POST["person"].",".$_POST["start"].",".$_POST["end"].",";
+$shiftTime = $_POST["workerName"].",".$_POST["start"].",".$_POST["end"].",";
 
 //ファイルに書き込む形式に曜日情報を結合
 for($i = 0; $i < $oneWeekDays; $i++) {
   $shiftTime = $shiftTime.$oneWeek[$i];
 }
 
-//shift.datに$shiftTimeを書き込み
+//従業員情報を、管理するファイルに追記
 if(is_writable("shift.dat") === true) {
   $filePointer = fopen("shift.dat", "a");
   if($filePointer === false) {
@@ -90,7 +90,7 @@ if(is_writable("shift.dat") === true) {
   </table>
   <form action='' method='post'>
     氏名
-    <select name='person'>
+    <select name='workerName'>
       <option value='たかけん'>たかけん</option>
       <option value='いのうえ'>いのうえ</option>
       <option value='ふじた'>ふじた</option>

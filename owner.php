@@ -1,70 +1,61 @@
 <?php
+$times = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5);
+//表に表示する曜日
+$weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
+//従業員ごとに写真を対応づける
+$workerIcons = array(
+  "たかけん" => "./takakura.png",
+  "いのうえ" => "./inoue.jpeg",
+  "ふじた" => "./huzita.jpeg",
+  "おりまー" => "./olimer.jpeg"
+);
 
-  $times = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5);
+$hours = 24;
+$oneWeekDays = 7;
 
-  $hours = 24;
-  $oneWeekDays = 7;
-  //表に表示する曜日
-  $weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
-  $pic = array(
-    "たかけん" => "./takakura.png",
-    "いのうえ"=> "./inoue.jpeg",
-    "ふじた" =>"./huzita.jpeg",
-    "おりまー" => "./olimer.jpeg"
-  );
+$shiftTimes = file("shift.dat");
+$workerMax = count($shiftTimes);
+$workerName = $_POST["workerName"];
 
-  $youbi = array(0, 0, 0, 0, 0, 0, 0 );
-  for($i=0 ;$i < 7; $i++) {
-    if(isset($_POST['c'.($i+1)]) ) {
-      $youbi[$i] = 1;
-    }
+//従業員情報を管理するファイルに、書き込まれた特定の従業員情報を削除
+for ($i = 0; $i < $oneWeekDays; $i++) {
+  if (strpos($shiftTimes[$i], $workerName) !== false) {
+    unset($shiftTimes[$i]);
   }
+}
 
-  $contents = $_POST["person"].",".$_POST["start"].",".$_POST["end"].",";
-  $count =count($youbi);
+//削除した配列を詰める
+$shiftTimes = array_merge($shiftTimes);
 
-  for($i=0; $i <= $count; $i++ ){
-    $contents = $contents.$youbi[$i];
-  }
+$workerMax = count($shiftTimes);
+for($i = 0; $i < $workerMax; $i++) {
+  //$workerShifts[][0]名前
+  //$workerShifts[][1]開始時間
+  //$workerShifts[][2]終了時間
+  //$workerShifts[][3]曜日
+  $workerShihts[] = explode(",", $shiftTimes[$i]);
+}
 
-
-  $contents = file("shift.dat");
-  $person = $_POST["person"];
-  //var_dump($contents);
-  //コンテンツが存在するだけpersndataの配列をつくりたい
-  //$persondata配列contentsと同じ文の配列の数
-  for ($i = 0; $i < $count; $i++){
-    if (strstr($contents[$i], $person) != false){
-      unset($contents[$i]);
-    }
-  }
-
-  $contents = array_merge($contents);
-  $count = count($contents);
-
-  for($i=0; $i < $count; $i++ ) {
-    $persondata[] = explode(",", $contents[$i]);
-  }
-
-  if(is_writable("shift.dat")){
-    if(!$fp = fopen("shift.dat", "w")){
-      echo "could not open";
-      exit;
-    }
-    for($i = 0; $i < $count; $i++ ){
-      if(fwrite($fp, $contents[$i]) === false){
-        echo "could not write";
-        exit;
-      }
-    }
-    fclose($fp);
-  } else {
-    echo "not writable";
+//従業員情報を、管理するファイルを空にして書き直す
+if(is_writable("shift.dat")  === true) {
+  $filePointer = fopen("shift.dat", "w");
+  if($filePointer === false) {
+    echo "could not open";
     exit;
   }
-
+  //配列を１行づつ書き込む
+  for($i = 0; $i < $workerMax; $i++ ) {
+    if(fwrite($filePointer, $shiftTimes[$i]) === false) {
+      echo "could not write";
+      exit;
+    }
+  }
+  fclose($filePointer);
+} else {
+  echo "not writable";
+  exit;
+}
 ?>
-
 <!DOCTYPE html>
 <html lang ='ja'>
 <head>
@@ -75,53 +66,51 @@
 <body>
   <h1>シフトのチェックができます</h1>
   <table>
-    <?php for($i = 0; $i <= $oneWeekDays ;$i++): ?>
+    <?php
+    //週の曜日の７行+時間帯の表示の１行を表示させるため<=条件式とする
+      for($i = 0; $i <= $oneWeekDays; $i++):
+    ?>
       <tr>
         <?php
-         for($j = 0; $j < $hours; $j++): ?>
+          //１日24時間分の列+曜日の表示の１列を表示させるため<=条件式とする
+          for($j = 0; $j <= $hours; $j++):
+        ?>
           <td>
-          <?php
-          if ($j > 0 && $i == 0) {
-            echo $times[$j-1];
-          } elseif ($j == 0 && $i > 0) {
-            echo $weekJpNames[$i-1];
-          } else {
-            echo '　';
-          }
-
-          for ($k = 0; $k < $count; $k++) {
-            //スタートでポストされた値がtimeの何番目位置番号を保存する
-            //スタートでポストされた値がtime配列のjの位置に保存されていますか？
-            //timeの添字がj（time配列のj番目）
-            //timeのj番目のことをsatarttimeに保存します
-            for($l = 0; $l < 25; $l++) {
-              if ( $times[$l] == $persondata[$k][1]) {
-                //右のものを左に入れる
-                $starttime = $l;
+            <?php
+              //表に時間と曜日を表示
+              if ($j > 0 && $i == 0) {
+                echo $times[$j-1];
+              } elseif ($j == 0 && $i > 0) {
+                echo $weekJpNames[$i-1];
+              } else {
+                echo '　';
               }
-              if ($times[$l] == $persondata[$k][2]) {
-                $endtime = $l;
+
+              //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
+              for ($k = 0; $k < $workerMax; $k++) {
+                for($l = 0; $l <= $hours; $l++) {
+                  if ( $times[$l] == $workerShihts[$k][1]) {
+                    $starttime = $l;
+                  }
+                  if ($times[$l] == $workerShihts[$k][2]) {
+                    $endtime = $l;
+                  }
+                }
+                //時間表示の１行に書き込まれないようにする
+                if( $i > 0 && $j - 1 >= $starttime && $j - 1 < $endtime  && $workerShihts[$k][3][$i-1] == 1 ) {
+                   echo "<img src='{$workerIcons[$workerShihts[$k][0]]}'>\n";
+                }
               }
-            }
-            //変化する値を左側におく
-            if( $j - 1 >= $starttime && $j - 1 < $endtime  && $persondata[$k][3][$i-1] == 1 && $i > 0) {
-               echo "<img src='{$pic[$persondata[$k][0]]}'>\n";
-            }
-          }
-
-
-           ?> </tb>
-
+            ?>
+          </tb>
         <?php endfor; ?>
       </tr>
     <?php endfor; ?>
   </table>
   <form action='' method='post' enctype="multipart/form-data">
-  <!-- valueを送信 (POSTする)-->
-  <!-- 氏名：<input type='text' name='person' /> -->
   シフトを変更したい従業員を選択してください
   <br>
-  <select name='person'>
+  <select name='workerName'>
     <option value="従業員一覧">従業員</option>
     <option value='たかけん'>たかけん</option>
     <option value='いのうえ'>いのうえ</option>

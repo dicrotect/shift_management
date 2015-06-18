@@ -1,18 +1,17 @@
 <?php
-
 $times = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5);
-
-$hours = 24;
-$oneWeekDays = 7;
 //表に表示する曜日
 $weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
-
+//従業員ごとに写真を対応づける
 $workerIcons = array(
   "たかけん" => "./takakura.png",
   "いのうえ" => "./inoue.jpeg",
   "ふじた" => "./huzita.jpeg",
   "おりまー" => "./olimer.jpeg"
 );
+
+$hours = 24;
+$oneWeekDays = 7;
 
 $shiftTimes = file("shift.dat");
 
@@ -65,7 +64,7 @@ for($i = 0; $i < $workerMax; $i++) {
                     $endTime = $l;
                   }
                 }
-                //時間表示の１行目に書き込まれないようにする。
+                //時間表示の１行目に書き込まれないようにする
                 if ($i > 0 && $j - 1 >= $startTime && $j - 1 <= $endTime && $workerShifts[$k][3][$i-1] == 1) {
                   echo "<img src='{$workerIcons[$workerShifts[$k][0]]}'>\n";
                 }
