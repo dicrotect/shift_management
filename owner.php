@@ -20,8 +20,8 @@ $workerMax = count($shiftTimes);
 $workerName = $_POST["workerName"];
 
 //従業員情報を管理するファイルに、書き込まれた特定の従業員情報を削除
-for ($i = 0; $i < $oneWeekDays; $i++) {
-  if (strpos($shiftTimes[$i], $workerName) !== false) {
+for($i = 0; $i < $oneWeekDays; $i++) {
+  if(strpos($shiftTimes[$i], $workerName) !== false) {
     unset($shiftTimes[$i]);
   }
 }
@@ -79,7 +79,7 @@ fclose($filePointer);
           <td>
             <?php
               //表に時間と曜日を表示
-              if ($j > 0 && $i == 0) {
+              if($j > 0 && $i == 0) {
                 echo $times[$j-1];
               } elseif ($j == 0 && $i > 0) {
                 echo $weekJpNames[$i-1];
@@ -88,17 +88,17 @@ fclose($filePointer);
               }
 
               //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
-              for ($k = 0; $k < $workerMax; $k++) {
+              for($k = 0; $k < $workerMax; $k++) {
                 for($l = 0; $l <= $hours; $l++) {
-                  if ($times[$l] == $workerShihts[$k][1]) {
+                  if($times[$l] == $workerShihts[$k][1]) {
                     $starttime = $l;
                   }
-                  if ($times[$l] == $workerShihts[$k][2]) {
+                  if($times[$l] == $workerShihts[$k][2]) {
                     $endtime = $l;
                   }
                 }
                 //時間表示の１行に書き込まれないようにする
-                if($i > 0 && $j - 1 >= $starttime && $j - 1 < $endtime  && $workerShihts[$k][3][$i-1] == 1 ) {
+                if($i > 0 && $j - 1 >= $starttime && $j - 1 < $endtime && $workerShihts[$k][3][$i-1] == 1) {
                    echo "<img src='{$workerIcons[$workerShihts[$k][0]]}'>\n";
                 }
               }

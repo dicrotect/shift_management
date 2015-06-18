@@ -26,21 +26,20 @@ for($i = 0; $i < $oneWeekDays; $i++) {
 }
 
 //従業員情報を、管理するファイルに追記
-if(is_writable($shiftDatPath) === true) {
-  $filePointer = fopen($shiftDatPath, "a");
-  if($filePointer === false) {
-    echo "could not open";
-    exit;
-  } elseif(fwrite($filePointer, $shiftTime."\n") === false) {
-    echo "could not write";
-    exit;
-  }
-  fclose($filePointer);
-} else {
+if(is_writable($shiftDatPath) === false) {
   echo "not writable";
   exit;
 }
-
+$filePointer = fopen($shiftDatPath, "a");
+if($filePointer === false) {
+  echo "could not open";
+  exit;
+}
+if(fwrite($filePointer, $shiftTime."\n") === false) {
+  echo "could not write";
+  exit;
+}
+fclose($filePointer);
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +64,7 @@ if(is_writable($shiftDatPath) === true) {
           <td>
             <?php
               //表に曜日と時間を表示
-              if ($j > 0 && $i == 0) {
+              if($j > 0 && $i == 0) {
                 echo $times[$j-1];
               } elseif ($j == 0 && $i > 0) {
                 echo $weekJpNames[$i-1];
@@ -73,16 +72,16 @@ if(is_writable($shiftDatPath) === true) {
                 echo '　';
               }
               //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
-              for ($k = 0; $k < $hours; $k++) {
-                if ($times[$k] == $_POST['start']) {
+              for($k = 0; $k < $hours; $k++) {
+                if($times[$k] == $_POST['start']) {
                   $startTime = $k;
                 }
-                if ($times[$k] == $_POST['end']) {
+                if($times[$k] == $_POST['end']) {
                   $endTime = $k;
                 }
               }
               //開始時間から終了時間とシフトに入る曜日に◯を出力
-              if ($i > 0 && $j - 1 >= $startTime && $j - 1 <= $endTime  && $i == $_POST['c'.$i] ) {
+              if($i > 0 && $j - 1 >= $startTime && $j - 1 <= $endTime  && $i == $_POST['c'.$i] ) {
                 echo '◯';
               }
              ?>

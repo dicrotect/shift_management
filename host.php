@@ -48,7 +48,7 @@ for($i = 0; $i < $workerMax; $i++) {
           <td>
             <?php
               //表に曜日と時間を表示
-              if ($j > 0 && $i == 0) {
+              if($j > 0 && $i == 0) {
                 echo $times[$j-1];
               } elseif ($j == 0 && $i > 0) {
                 echo $weekJpNames[$i-1];
@@ -56,18 +56,18 @@ for($i = 0; $i < $workerMax; $i++) {
                 echo '　';
               }
 
-              for ($k = 0; $k < $workerMax; $k++) {
+              for($k = 0; $k < $workerMax; $k++) {
                 //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
-                for ($l = 0; $l <= $hours; $l++) {
-                  if ($times[$l] == $workerShifts[$k][1]) {
+                for($l = 0; $l <= $hours; $l++) {
+                  if($times[$l] == $workerShifts[$k][1]) {
                     $startTime = $l;
                   }
-                  if ($times[$l] == $workerShifts[$k][2]) {
+                  if($times[$l] == $workerShifts[$k][2]) {
                     $endTime = $l;
                   }
                 }
                 //時間表示の１行目に書き込まれないようにする
-                if ($i > 0 && $j - 1 >= $startTime && $j - 1 <= $endTime && $workerShifts[$k][3][$i-1] == 1) {
+                if($i > 0 && $j - 1 >= $startTime && $j - 1 <= $endTime && $workerShifts[$k][3][$i-1] == 1) {
                   echo "<img src='{$workerIcons[$workerShifts[$k][0]]}'>\n";
                 }
               }
