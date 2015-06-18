@@ -7,7 +7,6 @@ $hours = 24;
 $oneWeekDays = 7;
 //表に表示する曜日
 $weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
-
 //シフトに入っている曜日を判定
 for($i = 0; $i < $oneWeekDays; $i++) {
   if(isset($_POST['c'.($i+1)])) {

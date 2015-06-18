@@ -1,61 +1,58 @@
 <?php
 
-  $s = range(6, 24);
-  $k = range(1, 5);
-  $time = array_merge($s,$k);
-  //sとkの配列を組み合わせる
-  //スーパーグローバル変数$_POST
+  $times = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5);
 
-if( $_SERVER['REQUEST_METHOD']=='POST') {
-  //送信（POST）されているか
-  //送信されたvalueを受け取る
-}
+  $hours = 24;
+  $oneWeekDays = 7;
+  //表に表示する曜日
+  $weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
+  $pic = array(
+    "たかけん" => "./takakura.png",
+    "いのうえ"=> "./inoue.jpeg",
+    "ふじた" =>"./huzita.jpeg",
+    "おりまー" => "./olimer.jpeg"
+  );
+
   $youbi = array(0, 0, 0, 0, 0, 0, 0 );
-  for($b=0 ;$b < 7; $b++) {
-    if(isset($_POST['c'.($b+1)]) ) {
-      $youbi[$b] = 1;
+  for($i=0 ;$i < 7; $i++) {
+    if(isset($_POST['c'.($i+1)]) ) {
+      $youbi[$i] = 1;
     }
   }
 
-  $file = "file.dat";
-  $contents = $_POST["person"]."　".$_POST["start"]."　".$_POST["end"]."　";
+  $contents = $_POST["person"].",".$_POST["start"].",".$_POST["end"].",";
   $count =count($youbi);
-  for($y=0; $y <= $count;$y++ ){
-    // contentsにyoubiをふくめたい
-    // countで７回回る宣言
-    // ７回youbiの配列から値をとりだして、ファイルに保存するデータを作る
-    // ファイルにデータを保存したい
-    $contents = $contents.$youbi[$y];
+
+  for($i=0; $i <= $count; $i++ ){
+    $contents = $contents.$youbi[$i];
   }
 
-  $file = "file.dat";
-  $worker = "worker.dat"
-  $contents = file($file);
+
+  $contents = file("shift.dat");
   $person = $_POST["person"];
   //var_dump($contents);
   //コンテンツが存在するだけpersndataの配列をつくりたい
   //$persondata配列contentsと同じ文の配列の数
-  for ($j = 0; $j < $count; $j++) {
-    if (strstr($contents[$j], $person) != false) {
-      unset($contents[$j]);
+  for ($i = 0; $i < $count; $i++){
+    if (strstr($contents[$i], $person) != false){
+      unset($contents[$i]);
     }
   }
+
   $contents = array_merge($contents);
   $count = count($contents);
-  var_dump($contents);
-  for($y=0; $y < $count; $y++ ) {
-    $persondata[] = explode("　", $contents[$y]);
+
+  for($i=0; $i < $count; $i++ ) {
+    $persondata[] = explode(",", $contents[$i]);
   }
-  // $worker = array("たかけん", "いのうえ", "ふじた", "おりまー");
-  // for ($w=0; $w <count($worker) ; $w++) {
-    //if($_POST["person"] == $worker[$w]) {
-  if(is_writable($file)) {
-    if(!$fp = fopen($file, "w")){
+
+  if(is_writable("shift.dat")){
+    if(!$fp = fopen("shift.dat", "w")){
       echo "could not open";
       exit;
     }
-    for($m = 0; $m < $count; $m++ ){
-      if(fwrite($fp, $contents[$m]) === false){
+    for($i = 0; $i < $count; $i++ ){
+      if(fwrite($fp, $contents[$i]) === false){
         echo "could not write";
         exit;
       }
@@ -78,74 +75,37 @@ if( $_SERVER['REQUEST_METHOD']=='POST') {
 <body>
   <h1>シフトのチェックができます</h1>
   <table>
-    <?php for($b = 0; $b<8 ;$b++): ?>
+    <?php for($i = 0; $i <= $oneWeekDays ;$i++): ?>
       <tr>
         <?php
-         for($i = 0; $i<25; $i++): ?>
+         for($j = 0; $j < $hours; $j++): ?>
           <td>
           <?php
-          if ($i == 0 && $b == 0 ){
-            echo '　';
-          } elseif ($i < 20  && $b == 0) {
-            echo $s[$i - 1];
-            //[i-1]がsの配列の添え字
-            //s配列のi-1番目を抽出
-          } elseif ($b == 0) {
-            echo $k[$i - 20];
-          } elseif ($i == 0 && $b == 1) {
-            echo '月';
-          } elseif ($i == 0 && $b == 2) {
-            echo '火';
-          } elseif ($i == 0 && $b == 3) {
-            echo '水';
-          } elseif ($i == 0 && $b == 4) {
-            echo '木';
-          } elseif ($i == 0 && $b == 5) {
-            echo '金';
-          } elseif ($i == 0 && $b == 6) {
-            echo '土';
-          } elseif ($i == 0 && $b == 7) {
-            echo '日';
+          if ($j > 0 && $i == 0) {
+            echo $times[$j-1];
+          } elseif ($j == 0 && $i > 0) {
+            echo $weekJpNames[$i-1];
           } else {
             echo '　';
           }
 
-          // for ($j = 0; $j < 25; $j++) {
-          //   //スタートでポストされた値がtimeの何番目位置番号を保存する
-          //   //スタートでポストされた値がtime配列のjの位置に保存されていますか？
-          //   //timeの添字がj（time配列のj番目）
-          //   //timeのj番目のことをsatarttimeに保存します
-          //   if ( $time[$j] == $_POST['start'] ) {
-          //   //右のものを左に入れる
-          //     $starttime = $j;
-          //   }
-          //   if ($time[$j] == $_POST['end'] ) {
-          //     $endtime = $j;
-          //   }
-          // }
-          // //変化する値を左側におく
-          // if( $i - 1 >= $starttime && $i - 1 <= $endtime  && $b == $_POST['c'.$b] && $b > 0) {
-          //   echo '◯';
-          // }
-          $pic = array("たかけん" => "./takakura.png","いのうえ"=> "./inoue.jpeg","ふじた" =>"./huzita.jpeg","おりまー" => "./olimer.jpeg");
-          //$pic = array("./takakura.png","./inoue.jpeg","./huzita.jpeg","./olimer.jpeg");
-          for ($j = 0; $j < $count; $j++) {
+          for ($k = 0; $k < $count; $k++) {
             //スタートでポストされた値がtimeの何番目位置番号を保存する
             //スタートでポストされた値がtime配列のjの位置に保存されていますか？
             //timeの添字がj（time配列のj番目）
             //timeのj番目のことをsatarttimeに保存します
-            for($p = 0; $p < 25; $p++) {
-              if ( $time[$p] == $persondata[$j][1] ) {
+            for($l = 0; $l < 25; $l++) {
+              if ( $times[$l] == $persondata[$k][1]) {
                 //右のものを左に入れる
-                $starttime = $p;
+                $starttime = $l;
               }
-              if ($time[$p] == $persondata[$j][2] ) {
-                $endtime = $p;
+              if ($times[$l] == $persondata[$k][2]) {
+                $endtime = $l;
               }
             }
             //変化する値を左側におく
-            if( $i - 1 >= $starttime && $i - 1 < $endtime  && $persondata[$j][3][$b-1] == 1 && $b > 0) {
-               echo "<img src='{$pic[$persondata[$j][0]]}'>\n";
+            if( $j - 1 >= $starttime && $j - 1 < $endtime  && $persondata[$k][3][$i-1] == 1 && $i > 0) {
+               echo "<img src='{$pic[$persondata[$k][0]]}'>\n";
             }
           }
 
