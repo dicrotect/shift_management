@@ -4,16 +4,18 @@ $times = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 2
 $weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
 //従業員ごとに写真を対応づける
 $workerIcons = array(
-  "たかけん" => "./takakura.png",
-  "いのうえ" => "./inoue.jpeg",
-  "ふじた" => "./huzita.jpeg",
-  "おりまー" => "./olimer.jpeg"
+  "たかけん" => "./workericons/takakura.png",
+  "いのうえ" => "./workericons/inoue.jpeg",
+  "ふじた" => "./workericons/huzita.jpeg",
+  "おりまー" => "./workericons/olimer.jpeg"
 );
+
+$shiftDatPath = "./data/shift.dat";
 
 $hours = 24;
 $oneWeekDays = 7;
 
-$shiftTimes = file("shift.dat");
+$shiftTimes = file($shiftDatPath);
 
 $workerMax = count($shiftTimes);
 for($i = 0; $i < $workerMax; $i++) {
@@ -29,7 +31,7 @@ for($i = 0; $i < $workerMax; $i++) {
 <head>
   <meta charaset = 'UTF-8'>
   <title>シフトが出来上がったよ</title>
-  <link rel="stylesheet" href="host.css">
+  <link rel="stylesheet" href="./stylesheet/host.css">
 </head>
 <body>
   <h1>完成したシフト表はこちら</h1>

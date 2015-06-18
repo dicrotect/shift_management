@@ -1,12 +1,16 @@
 <?php
 
 $times = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5);
-
-$oneWeek = array(0, 0, 0, 0, 0, 0, 0);
-$hours = 24;
-$oneWeekDays = 7;
 //表に表示する曜日
 $weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
+
+$oneWeek = array(0, 0, 0, 0, 0, 0, 0);
+
+$shiftDatPath = "./data/shift.dat";
+
+$hours = 24;
+$oneWeekDays = 7;
+
 //シフトに入っている曜日を判定
 for($i = 0; $i < $oneWeekDays; $i++) {
   if(isset($_POST['c'.($i+1)])) {
@@ -22,8 +26,8 @@ for($i = 0; $i < $oneWeekDays; $i++) {
 }
 
 //従業員情報を、管理するファイルに追記
-if(is_writable("shift.dat") === true) {
-  $filePointer = fopen("shift.dat", "a");
+if(is_writable($shiftDatPath) === true) {
+  $filePointer = fopen($shiftDatPath, "a");
   if($filePointer === false) {
     echo "could not open";
     exit;
@@ -44,7 +48,7 @@ if(is_writable("shift.dat") === true) {
 <head>
   <meta charaset='UTF-8'>
   <title>希望シフトを入力しよう</title>
-  <link rel="stylesheet" href="shift.css">
+  <link rel="stylesheet" href="./stylesheet/shift.css">
 </head>
 <body>
   <h1>希望の基本シフトを入力してください</h1>

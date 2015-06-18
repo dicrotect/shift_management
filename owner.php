@@ -4,16 +4,18 @@ $times = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 2
 $weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
 //従業員ごとに写真を対応づける
 $workerIcons = array(
-  "たかけん" => "./takakura.png",
-  "いのうえ" => "./inoue.jpeg",
-  "ふじた" => "./huzita.jpeg",
-  "おりまー" => "./olimer.jpeg"
+  "たかけん" => "./workericons/takakura.png",
+  "いのうえ" => "./workericons/inoue.jpeg",
+  "ふじた" => "./workericons/huzita.jpeg",
+  "おりまー" => "./workericons/olimer.jpeg"
 );
+
+$shiftDatPath = "./data/shift.dat";
 
 $hours = 24;
 $oneWeekDays = 7;
 
-$shiftTimes = file("shift.dat");
+$shiftTimes = file($shiftDatPath);
 $workerMax = count($shiftTimes);
 $workerName = $_POST["workerName"];
 
@@ -37,31 +39,30 @@ for($i = 0; $i < $workerMax; $i++) {
 }
 
 //従業員情報を、管理するファイルを空にして書き直す
-if(is_writable("shift.dat")  === true) {
-  $filePointer = fopen("shift.dat", "w");
-  if($filePointer === false) {
-    echo "could not open";
-    exit;
-  }
-  //配列を１行づつ書き込む
-  for($i = 0; $i < $workerMax; $i++ ) {
-    if(fwrite($filePointer, $shiftTimes[$i]) === false) {
-      echo "could not write";
-      exit;
-    }
-  }
-  fclose($filePointer);
-} else {
+if(is_writable($shiftDatPath)  === false) {
   echo "not writable";
   exit;
 }
+$filePointer = fopen($shiftDatPath, "w");
+if($filePointer === false) {
+  echo "could not open";
+  exit;
+}
+//配列を１行づつ書き込む
+for($i = 0; $i < $workerMax; $i++ ) {
+  if(fwrite($filePointer, $shiftTimes[$i]) === false) {
+    echo "could not write";
+    exit;
+  }
+}
+fclose($filePointer);
 ?>
 <!DOCTYPE html>
 <html lang ='ja'>
 <head>
   <meta charaset = 'UTF-8'>
   <title>シフトを確認して調整しましょう</title>
-  <link rel="stylesheet" href="owner.css">
+  <link rel="stylesheet" href="./stylesheet/owner.css">
 </head>
 <body>
   <h1>シフトのチェックができます</h1>
@@ -89,7 +90,7 @@ if(is_writable("shift.dat")  === true) {
               //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
               for ($k = 0; $k < $workerMax; $k++) {
                 for($l = 0; $l <= $hours; $l++) {
-                  if ( $times[$l] == $workerShihts[$k][1]) {
+                  if ($times[$l] == $workerShihts[$k][1]) {
                     $starttime = $l;
                   }
                   if ($times[$l] == $workerShihts[$k][2]) {
@@ -97,7 +98,7 @@ if(is_writable("shift.dat")  === true) {
                   }
                 }
                 //時間表示の１行に書き込まれないようにする
-                if( $i > 0 && $j - 1 >= $starttime && $j - 1 < $endtime  && $workerShihts[$k][3][$i-1] == 1 ) {
+                if($i > 0 && $j - 1 >= $starttime && $j - 1 < $endtime  && $workerShihts[$k][3][$i-1] == 1 ) {
                    echo "<img src='{$workerIcons[$workerShihts[$k][0]]}'>\n";
                 }
               }
