@@ -32,11 +32,11 @@ for($i = 0; $i < $workerMax; $i++) {
   <meta charaset = 'UTF-8'>
   <title>シフトが出来上がったよ</title>
   <link rel="stylesheet" href="./stylesheet/host.css">
-  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <!-- <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css"> -->
 </head>
 <body>
   <h1>完成したシフト表はこちら</h1>
-  <table class="pure-table pure-table-bordered">
+  <table>
     <?php
       //週の曜日の７行+時間帯の表示の１行を表示させるため<=条件式とする
       for($i = 0; $i <= $oneWeekDays; $i++):

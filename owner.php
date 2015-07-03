@@ -20,7 +20,7 @@ $workerMax = count($shiftTimes);
 $workerName = $_POST["workerName"];
 
 //従業員情報を管理するファイルに、書き込まれた特定の従業員情報を削除
-for($i = 0; $i < $oneWeekDays; $i++) {
+for($i = 0; $i < $workerMax; $i++) {
   if(strpos($shiftTimes[$i], $workerName) !== false) {
     unset($shiftTimes[$i]);
   }
@@ -62,7 +62,7 @@ fclose($filePointer);
 <head>
   <meta charaset = 'UTF-8'>
   <title>シフトを確認して調整しましょう</title>
-  <link rel="stylesheet" href="./stylesheet/owner.css">
+  <link rel="stylesheet" href="./stylesheet/host.css">
 </head>
 <body>
   <h1>シフトのチェックができます</h1>
@@ -70,6 +70,11 @@ fclose($filePointer);
     <?php
     //週の曜日の７行+時間帯の表示の１行を表示させるため<=条件式とする
       for($i = 0; $i <= $oneWeekDays; $i++):
+        if ($i == 0){
+          echo "<thead>";
+        } elseif($i == 1){
+          echo "<tbody>";
+        }
     ?>
       <tr>
         <?php
@@ -107,6 +112,13 @@ fclose($filePointer);
         <?php endfor; ?>
       </tr>
     <?php endfor; ?>
+    <?php
+      if ($i == 0) {
+        echo "</thead>";
+      } elseif ($i == $oneWeekDays) {
+        echo "</tbody>";
+      }
+    ?>
   </table>
   <form action='' method='post' enctype="multipart/form-data">
   シフトを変更したい従業員を選択してください

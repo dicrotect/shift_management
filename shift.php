@@ -47,7 +47,8 @@ fclose($filePointer);
 <head>
   <meta charaset='UTF-8'>
   <title>希望シフトを入力しよう</title>
-  <link rel="stylesheet" href="./stylesheet/shift.css">
+  <link rel="stylesheet" href="./stylesheet/host.css">
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
 </head>
 <body>
   <h1>希望の基本シフトを入力してください</h1>
@@ -55,6 +56,11 @@ fclose($filePointer);
     <?php
       //週の曜日の７行+時間帯の表示の１行を表示させるため<=条件式とする
       for($i = 0; $i <= $oneWeekDays; $i++):
+        if ($i == 0){
+          echo "<thead>";
+        } elseif($i == 1){
+          echo "<tbody>";
+        }
     ?>
       <tr>
         <?php
@@ -85,11 +91,17 @@ fclose($filePointer);
                 echo '◯';
               }
              ?>
-           </tb>
-
+           </td>
       <?php endfor; ?>
     </tr>
     <?php endfor; ?>
+    <?php
+      if ($i == 0) {
+        echo "</thead>";
+      } elseif ($i == $oneWeekDays) {
+        echo "</tbody>";
+      }
+    ?>
   </table>
   <form action='' method='post'>
     氏名
@@ -163,8 +175,7 @@ fclose($filePointer);
       <option value='4'>4</option>
       <option value='5'>5</option>
     </select>
-    <p><input type='submit' name='push' value='作成する'></p>
-    <p><input type='reset' name='reset' value='更新する'></p>
+    <p><input class="pure-button pure-button-active" type='submit' name='push' value='作成する'></p>
   </form>
 
 </body>
