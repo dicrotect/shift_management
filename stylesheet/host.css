@@ -1,7 +1,18 @@
+
 body {
   background-color:#FFF6D9;
   font-family: sans-serif;
 }
+
+thead tr:nth-child(1) {
+  background-color:#9CD4E2;
+}
+tbody td:nth-child(1) {
+  background-color:blue;
+}
+/*thead tr:nth-child(1) td:nth-child(1){
+  background-color:red;
+}*/
 
 h1 {
   color: #EA512A;

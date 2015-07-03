@@ -32,49 +32,63 @@ for($i = 0; $i < $workerMax; $i++) {
   <meta charaset = 'UTF-8'>
   <title>シフトが出来上がったよ</title>
   <link rel="stylesheet" href="./stylesheet/host.css">
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
 </head>
 <body>
   <h1>完成したシフト表はこちら</h1>
-  <table>
+  <table class="pure-table pure-table-bordered">
     <?php
       //週の曜日の７行+時間帯の表示の１行を表示させるため<=条件式とする
       for($i = 0; $i <= $oneWeekDays; $i++):
+        if ($i == 0){
+          echo "<thead>";
+        } elseif($i == 1){
+          echo "<tbody>";
+        }
     ?>
-      <tr>
-        <?php
-          //１日24時間分の列+曜日の表示の１列を表示させるため<=条件式とする
-          for($j = 0; $j <= $hours; $j++):
-        ?>
-          <td>
-            <?php
-              //表に曜日と時間を表示
-              if($j > 0 && $i == 0) {
-                echo $times[$j-1];
-              } elseif ($j == 0 && $i > 0) {
-                echo $weekJpNames[$i-1];
-              } else {
-                echo '　';
-              }
+        <tr>
+          <?php
+            //１日24時間分の列+曜日の表示の１列を表示させるため<=条件式とする
+            for($j = 0; $j <= $hours; $j++):
+          ?>
 
-              for($k = 0; $k < $workerMax; $k++) {
-                //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
-                for($l = 0; $l <= $hours; $l++) {
-                  if($times[$l] == $workerShifts[$k][1]) {
-                    $startTime = $l;
+            <td>
+              <?php
+                //表に曜日と時間を表示
+                if($j > 0 && $i == 0) {
+                  echo $times[$j-1];
+                } elseif ($j == 0 && $i > 0) {
+                  echo $weekJpNames[$i-1];
+                } else {
+                  echo '　';
+                }
+
+                for($k = 0; $k < $workerMax; $k++) {
+                  //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
+                  for($l = 0; $l <= $hours; $l++) {
+                    if($times[$l] == $workerShifts[$k][1]) {
+                      $startTime = $l;
+                    }
+                    if($times[$l] == $workerShifts[$k][2]) {
+                      $endTime = $l;
+                    }
                   }
-                  if($times[$l] == $workerShifts[$k][2]) {
-                    $endTime = $l;
+                  //時間表示の１行目に書き込まれないようにする
+                  if($i > 0 && $j - 1 >= $startTime && $j - 1 <= $endTime && $workerShifts[$k][3][$i-1] == 1) {
+                    echo "<img src='{$workerIcons[$workerShifts[$k][0]]}' width=30px height=30px>\n";
                   }
                 }
-                //時間表示の１行目に書き込まれないようにする
-                if($i > 0 && $j - 1 >= $startTime && $j - 1 <= $endTime && $workerShifts[$k][3][$i-1] == 1) {
-                  echo "<img src='{$workerIcons[$workerShifts[$k][0]]}'>\n";
-                }
-              }
-            ?>
-          </td>
-        <?php endfor; ?>
-      </tr>
+              ?>
+            </td>
+          <?php endfor; ?>
+        </tr>
+        <?php
+          if ($i == 0) {
+            echo "</thead>";
+          } elseif ($i == $oneWeekDays) {
+            echo "</tbody>";
+          }
+        ?>
     <?php endfor; ?>
   </table>
 </body>

@@ -27,6 +27,9 @@ td {
   height: 12.5%
   text-align: center;
 }
+.pure-table td:nth-child(1) {
+  background-color:white;
+}
 
 img {
   width: 30px;
