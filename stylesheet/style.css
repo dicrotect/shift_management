@@ -22,7 +22,7 @@ tbody td:nth-child(1) {
 body {
   background-image :url("../workericons/blackboard.png");
   background-repeat: no-repeat;
-  background-size: 100% 112%;
+  background-size: 100% 120%;
 }
 
 @font-face {
@@ -56,8 +56,8 @@ td {
   border-style: solid;
   border-color: white;
   border-width: thin;
-  width: 4%;
-  height: 12.5%
+  width: 50px;
+  height: 50px;
   text-align: center;
   vertical-align: text-top;
   z-index: 20;

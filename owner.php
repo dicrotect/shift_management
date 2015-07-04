@@ -3,17 +3,83 @@ $times = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 2
 //表に表示する曜日
 $weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
 //従業員ごとに写真を対応づける
-$workerIcons = array(
-  "たかけん" => "./workericons/takakura.png",
-  "いのうえ" => "./workericons/inoue.jpeg",
-  "ふじた" => "./workericons/huzita.jpeg",
-  "おりまー" => "./workericons/olimer.jpeg"
-);
+// $workerIcons = array(
+//   "たかけん" => "./workericons/takakura.png",
+//   "いのうえ" => "./workericons/inoue.jpeg",
+//   "ふじた" => "./workericons/huzita.jpeg",
+//   "おりまー" => "./workericons/olimer.jpeg"
+// );
 
 $shiftDatPath = "./data/shift.dat";
+$workerDatPath = "./data/worker.dat";
 
 $hours = 24;
 $oneWeekDays = 7;
+
+
+if(isset($_POST["newWorker"]) && !(empty($_POST["newWorker"])) && !(empty($_FILES["upfile"]["name"]))) {
+
+  $newWorker = $_POST["newWorker"];
+
+
+  if(is_uploaded_file($_FILES["upfile"]["tmp_name"])) {
+    if(move_uploaded_file($_FILES["upfile"]["tmp_name"],$_FILES["upfile"]["name"])) {
+      chmod($_FILES["upfile"]["name"],0644);
+      echo $_FILES["upfile"]["name"]."をアップロードしました。";
+    } else {
+      echo "ファイルをアップロードできません。";
+    }
+  } else {
+    echo "ファイルが選択されていません。";
+  }
+
+  $upfile =$_FILES["upfile"]["name"];
+  //ファイルに書き込む指定
+  $workerIcons = $newWorker.",".$upfile;
+
+  var_dump($_POST["newWorker"]);
+  var_dump($_FILES["upfile"]);
+
+  if(is_writable($workerDatPath) === false) {
+    echo "not writable";
+    exit;
+  }
+  $filePointer = fopen($workerDatPath, "a");
+  if($filePointer == false) {
+    echo "could not open";
+    exit;
+  }
+  if(fwrite($filePointer, $workerIcons."\n") === false) {
+    echo "could not write";
+    exit;
+  }
+
+  fclose($filePointer);
+}
+
+$workerData = file($workerDatPath);
+$newWorkerMax = count($workerData);
+
+for($i = 0; $i < $newWorkerMax; $i++) {
+  //$workerIcons[][0]=登録した従業員の名前
+  //$workerIcons[][1]=登録した従業員の画像
+  $workerIcons[] = explode(",", $workerData[$i]);
+}
+echo "<img src='./workericons/{$workerIcons[0][1]}'>";
+//echo "<img src='./workericons/" . $workericons[0][1] . "'>";
+
+var_dump($workerIcons);
+
+
+
+
+
+
+
+
+
+
+
 
 $shiftTimes = file($shiftDatPath);
 $workerMax = count($shiftTimes);
@@ -56,13 +122,22 @@ for($i = 0; $i < $workerMax; $i++ ) {
   }
 }
 fclose($filePointer);
+
+
+
 ?>
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang ='ja'>
 <head>
   <meta charaset = 'UTF-8'>
   <title>シフトを確認して調整しましょう</title>
-  <link rel="stylesheet" href="./stylesheet/host.css">
+  <link rel="stylesheet" href="./stylesheet/style.css">
 </head>
 <body>
   <h1>シフトのチェックができます</h1>
@@ -103,7 +178,7 @@ fclose($filePointer);
                   }
                 }
                 //時間表示の１行に書き込まれないようにする
-                if($i > 0 && $j - 1 >= $starttime && $j - 1 < $endtime && $workerShihts[$k][3][$i-1] == 1) {
+                if($i > 0 && $j - 1 >= $starttime && $j - 1 <= $endtime && $workerShihts[$k][3][$i-1] == 1) {
                    echo "<img src='{$workerIcons[$workerShihts[$k][0]]}'>\n";
                 }
               }
@@ -136,7 +211,7 @@ fclose($filePointer);
   <br>
   追加したい従業員を登録できます。
   <br>
-  <p2><input type='text' value='ここに名前を入力' name='new'></p2>
+  <p2><input type='text' value='ここに名前を入力' name='newWorker'></p2>
   <p3><input type="file" name="upfile"><p3>
   <br>
   <p4><input type='submit' value='登録する'></p4>

@@ -47,8 +47,8 @@ fclose($filePointer);
 <head>
   <meta charaset='UTF-8'>
   <title>希望シフトを入力しよう</title>
-  <link rel="stylesheet" href="./stylesheet/host.css">
-  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <link rel="stylesheet" href="./stylesheet/style.css">
+  <!-- <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css"> -->
 </head>
 <body>
   <h1>希望の基本シフトを入力してください</h1>
