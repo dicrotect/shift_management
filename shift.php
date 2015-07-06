@@ -51,12 +51,12 @@ fclose($filePointer);
     for($i = 0; $i <= $oneWeekDays; $i++):
       //ここも3項演算子
       ($i == 0) ? print "<thead>" : print "<tbody>";
-    ?>
+      ?>
       <tr>
         <?php
         //１日24時間分の列+曜日の表示の１列を表示させるため<=条件式とする
         for($j = 0; $j <= $hours; $j++):
-        ?>
+          ?>
           <td>
             <?php
             //表に曜日と時間を表示
@@ -68,16 +68,14 @@ fclose($filePointer);
               echo '　';
             }
 
-            //ここも入力がないときの処理を行わないようにする。
-            if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
-              //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
-              for($k = 0; $k < $hours; $k++) {
-                if($times[$k] == $_POST['start']) {
-                  $startTime = $k;
-                }
-                if($times[$k] == $_POST['end']) {
-                  $endTime = $k;
-                }
+            //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
+            for($k = 0; $k < $hours; $k++) {
+              if($times[$k] == $_POST['start']) {
+                $startTime = $k;
+              }
+              
+              if($times[$k] == $_POST['end']) {
+                $endTime = $k;
               }
               //開始時間から終了時間とシフトに入る曜日に◯を出力
               //同じ変数を先に評価してからの方が良いので順番を変更しました。
