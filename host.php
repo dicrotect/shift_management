@@ -1,13 +1,10 @@
 <?php
-$times = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5);
-//表に表示する曜日
-$weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
-
-$shiftDatPath = "./data/shift.dat";
+$weekJpNames   = array("月", "火", "水", "木", "金", "土", "日");
+$times         = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5);
+$shiftDatPath  = "./data/shift.dat";
 $workerDatPath = "./data/worker.dat";
-
-$hours = 24;
-$oneWeekDays = 7;
+$hours         = 24;
+$oneWeekDays   = 7;
 
 $shiftTimes = file($shiftDatPath);
 //従業員管理ファイルを読み込む

@@ -3,43 +3,37 @@ $weekJpNames   = array("月", "火", "水", "木", "金", "土", "日");
 $times         = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5);
 $oneWeek       = array(0, 0, 0, 0, 0, 0, 0);
 $workerDatPath = "./data/worker.dat";
+$shiftDatPath  = "./data/shift.dat";
 $oneWeekDays   = 7;
 $hours         = 24;
 $shiftFlag     = 1;
 
-//厳密にした方が良いのでissetとemptyで入力のないときは処理を行わないようにします。
-//(表示はされないけどエラーがおきている可能性がある)
-if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
-  //使わない場合は宣言しない方がよいのでifの中に。
-  $shiftDatPath  = "./data/shift.dat";
-
-  $shiftTime = $_POST["workerName"].",".$_POST["start"].",".$_POST["end"].",";
-  //ファイルに書き込む形式に曜日情報を結合
-  //ほぼ同じなので$oneWeekDaysに書き込むforループと統合しました。
-  for($i = 0; $i < $oneWeekDays; $i++) {
-    //以下の１行が3項演算子です。このぐらいなら1行でかけるから使った方がいいかも。
-    (isset($_POST['c'.($i+1)])) ? $oneWeek[$i] = $sfiftFlag : $oneWeek[$i];
-    $shiftTime = $shiftTime.$oneWeek[$i];
-  }
-  //従業員情報を、管理するファイルに追記
-  if(is_writable($shiftDatPath) === false) {
-    echo "not writable";
-    exit;
-  }
-
-  $filePointer = fopen($shiftDatPath, "a");
-  if($filePointer === false) {
-    echo "could not open";
-    exit;
-  }
-
-  if(fwrite($filePointer, $shiftTime."\n") === false) {
-    echo "could not write";
-    exit;
-  }
-
-  fclose($filePointer);
+$shiftTime = $_POST["workerName"].",".$_POST["start"].",".$_POST["end"].",";
+//ファイルに書き込む形式に曜日情報を結合
+//ほぼ同じなので$oneWeekDaysに書き込むforループと統合しました。
+for($i = 0; $i < $oneWeekDays; $i++) {
+  //以下の１行が3項演算子です。このぐらいなら1行でかけるから使った方がいいかも。
+  (isset($_POST['c'.($i+1)])) ? $oneWeek[$i] = $sfiftFlag : $oneWeek[$i];
+  $shiftTime = $shiftTime.$oneWeek[$i];
 }
+//従業員情報を、管理するファイルに追記
+if(is_writable($shiftDatPath) === false) {
+  echo "not writable";
+  exit;
+}
+
+$filePointer = fopen($shiftDatPath, "a");
+if($filePointer === false) {
+  echo "could not open";
+  exit;
+}
+
+if(fwrite($filePointer, $shiftTime."\n") === false) {
+  echo "could not write";
+  exit;
+}
+
+fclose($filePointer);
 ?>
 
 <!DOCTYPE html>
@@ -66,9 +60,9 @@ if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
           <td>
             <?php
             //表に曜日と時間を表示
-            if($j > 0 && $i == 0) {
+            if($i == 0 && $j > 0) {
               echo $times[$j-1];
-            } elseif($j == 0 && $i > 0) {
+            } elseif($i > 0 && $j == 0) {
               echo $weekJpNames[$i-1];
             } else {
               echo '　';
@@ -87,7 +81,7 @@ if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
               }
               //開始時間から終了時間とシフトに入る曜日に◯を出力
               //同じ変数を先に評価してからの方が良いので順番を変更しました。
-              if($i > 0 && $i == $_POST['c'.$i] && $j - 1 >= $startTime && $j - 1 <= $endTime ) {
+              if($i > 0 && $i == $_POST['c'.$i] && $j - 1 >= $startTime && $j - 1 <= $endTime) {
                 echo '◯';
               }
             }
