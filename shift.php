@@ -3,7 +3,6 @@
 $times = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5);
 //表に表示する曜日
 $weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
-
 $oneWeek = array(0, 0, 0, 0, 0, 0, 0);
 
 $shiftDatPath = "./data/shift.dat";
@@ -49,7 +48,6 @@ fclose($filePointer);
   <meta charaset='UTF-8'>
   <title>希望シフトを入力しよう</title>
   <link rel="stylesheet" href="./stylesheet/style.css">
-  <!-- <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css"> -->
 </head>
 <body>
   <h1>希望の基本シフトを入力してください</h1>

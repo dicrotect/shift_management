@@ -11,7 +11,6 @@ $oneWeekDays = 7;
 
 //新規の従業員登録のための情報が入力されてるか判定
 if(isset($_POST["newWorker"]) && !(empty($_POST["newWorker"])) && !(empty($_FILES["upfile"]["name"]))) {
-
   $newWorker = $_POST["newWorker"];
   //画像ファイルをアップロード
   if(is_uploaded_file($_FILES["upfile"]["tmp_name"])) {
@@ -51,7 +50,6 @@ if(isset($_POST["newWorker"]) && !(empty($_POST["newWorker"])) && !(empty($_FILE
 //従業員管理ファイルを読み込む
 $workerData = file($workerDatPath);
 $newWorkerMax = count($workerData);
-
 //従業員管理ファイルを配列化
 for($i = 0; $i < $newWorkerMax; $i++) {
   //$workerIcons[][0]登録した従業員の名前
@@ -101,7 +99,6 @@ for($i = 0; $i < $workerMax; $i++ ) {
   }
 }
 fclose($filePointer);
-
 ?>
 
 <!DOCTYPE html>

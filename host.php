@@ -36,7 +36,6 @@ for($i = 0; $i < $workerMax; $i++) {
   <meta charaset = 'UTF-8'>
   <title>シフトが出来上がったよ</title>
   <link rel="stylesheet" href="./stylesheet/style.css">
-  <!-- <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css"> -->
 </head>
 <body>
   <h1>完成したシフト表はこちら</h1>
