@@ -7,6 +7,7 @@ $weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
 $oneWeek = array(0, 0, 0, 0, 0, 0, 0);
 
 $shiftDatPath = "./data/shift.dat";
+$workerDatPath = "./data/worker.dat";
 
 $hours = 24;
 $oneWeekDays = 7;
@@ -106,10 +107,20 @@ fclose($filePointer);
   <form action='' method='post'>
     氏名
     <select name='workerName'>
-      <option value='たかけん'>たかけん</option>
-      <option value='いのうえ'>いのうえ</option>
-      <option value='ふじた'>ふじた</option>
-      <option value='おりまー'>おりまー</option>
+      <?php
+        $workerData = file($workerDatPath);
+        $newWorkerMax = count($workerData);
+        for($i = 0; $i < $newWorkerMax; $i++) {
+          //$workerIcons[][0]登録した従業員の名前
+          //$workerIcons[][1]登録した従業員の画像
+          $workerIcons[] = explode(",", $workerData[$i]);
+        }
+        for ($i = 0; $i < $newWorkerMax; $i++){
+          echo "<option value='{$workerIcons[$i][0]}'>";
+          echo $workerIcons[$i][0];
+          echo "</option>";
+        }
+      ?>
     </select><br>
     希望の曜日は？
     <p>
@@ -175,7 +186,10 @@ fclose($filePointer);
       <option value='4'>4</option>
       <option value='5'>5</option>
     </select>
-    <p><input class="pure-button pure-button-active" type='submit' name='push' value='作成する'></p>
+    <p><input type='submit' name='push' value='作成する'></p>
+    <a href="host.php">完成したシフトはこちら</a>
+    <a href="owner.php">シフト修正はこちら</a>
   </form>
+  <br>
 </body>
 </html>

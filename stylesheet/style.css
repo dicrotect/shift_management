@@ -1,9 +1,4 @@
 
-body {
-  background-color:white;
-  font-family: sans-serif;
-}
-
 thead tr:nth-child(1) {
   background-color:#E3C5F0;
   color: #38582C;
@@ -22,8 +17,12 @@ tbody td:nth-child(1) {
 body {
   background-image :url("../workericons/blackboard.png");
   background-repeat: no-repeat;
-  background-size: 100% 120%;
+  background-size: 100% 120% ;
+  background-color: #8F706A;
+  text-align: center;
+  font-family: 'tare';
 }
+
 
 @font-face {
   font-family: 'tare';
@@ -37,6 +36,10 @@ h1 {
   margin-top: 40px;
 }
 
+a {
+  font-family: 'tare';
+  font-size: 20px;
+}
 table {
   width: 80%;
   height: 250px;
@@ -74,10 +77,10 @@ img {
   height: 30px;
 }
 
-p2 {
-  width: 30px;
-  height: 20px;
+p {
+  text-align: center;
 }
+
 form {
   margin-top: 20px;
   text-align: center;

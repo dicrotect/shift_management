@@ -98,5 +98,9 @@ for($i = 0; $i < $workerMax; $i++) {
         ?>
     <?php endfor; ?>
   </table>
+  <br>
+      <a href="shift.php">シフト登録はこちら</a>
+      <a href="owner.php">シフトを修正はこちら</a>
+  <br>
 </body>
 </html>

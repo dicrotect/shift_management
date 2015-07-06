@@ -16,12 +16,10 @@ if(isset($_POST["newWorker"]) && !(empty($_POST["newWorker"])) && !(empty($_FILE
   //画像ファイルをアップロード
   if(is_uploaded_file($_FILES["upfile"]["tmp_name"])) {
     if(move_uploaded_file($_FILES["upfile"]["tmp_name"],"./workericons/".$_FILES["upfile"]["name"])) {
-
-
-      chmod("./workericons/".$_FILES["upfile"]["name"],0644);
+      chmod("./workericons/".$_FILES["upfile"]["name"],0750);
       echo $_FILES["upfile"]["name"]."をアップロードしました。";
-      
-
+      echo $_FILES["upfile"]["error"];
+      echo"<a href='http://192.168.33.10/shiftapp/owner.php'></a>";
     } else {
       echo "ファイルをアップロードできません。";
     }
@@ -32,7 +30,7 @@ if(isset($_POST["newWorker"]) && !(empty($_POST["newWorker"])) && !(empty($_FILE
   //登録した画像ファイルの変数を定義
   $upfile =$_FILES["upfile"]["name"];
   //投稿された名前と画像ファイルを従業員管理ファイルに書き込むための指定
-  $workerIcons = $newWorker.",".$upfile;
+  $workerIcon = $newWorker.",".$upfile;
 
   //新規従業員を従業員管理ファイルに書き込む
   if(is_writable($workerDatPath) === false) {
@@ -44,7 +42,7 @@ if(isset($_POST["newWorker"]) && !(empty($_POST["newWorker"])) && !(empty($_FILE
     echo "could not open";
     exit;
   }
-  if(fwrite($filePointer, $workerIcons."\n") === false) {
+  if(fwrite($filePointer, $workerIcon."\n") === false) {
     echo "could not write";
     exit;
   }
@@ -143,7 +141,7 @@ fclose($filePointer);
 
               //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
               for($k = 0; $k < $workerMax; $k++) {
-                for($l = 0; $l <= $hours; $l++) {
+                for($l = 0; $l < $hours; $l++) {
                   if($times[$l] == $workerShifts[$k][1]) {
                     $startTime = $l;
                   }
@@ -178,34 +176,34 @@ fclose($filePointer);
   <form action='' method='post' enctype="multipart/form-data">
   シフトを変更したい従業員を選択してください
   <br>
+  <br>
   <select name='workerName'>
     <option value="従業員一覧">従業員</option>]
-
     <?php
-
-    for ($i = 0; $i < $newWorkerMax; $i++){
-      echo "<option value='{$workerIcons[$i][0]}'>";
-      echo $workerIcons[$i][0];
-      echo "</option>";
-    }
+      for ($i = 0; $i < $newWorkerMax; $i++){
+        echo "<option value='{$workerIcons[$i][0]}'>";
+        echo $workerIcons[$i][0];
+        echo "</option>";
+      }
     ?>
 
-
-
   </select>
-
-
   <br>
-  <p1><input type='submit' value='シフトを削除する'></p1>
+  <p1><input type='submit' value='シフトをリセットする'></p1>
   <br>
   <br>
   追加したい従業員を登録できます。
   <br>
-  <p2><input type='text' value='ここに名前を入力' name='newWorker'></p2>
-  <p3><input type="file" name="upfile"><p3>
   <br>
+  名前
+  <p2><input type='text' value='' name='newWorker'></p2>
+  <br>
+  <p3><input type="file" name="upfile"><p3>
   <p4><input type='submit' value='登録する'></p4>
+  <br>
+  <a href="host.php">完成したシフトはこちら</a>
+  <a href="shift.php">シフト登録はこちら</a>
 </form>
-
+<br>
 </body>
 </html>
