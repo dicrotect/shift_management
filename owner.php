@@ -2,13 +2,6 @@
 $times = array(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5);
 //表に表示する曜日
 $weekJpNames = array("月", "火", "水", "木", "金", "土", "日");
-//従業員ごとに写真を対応づける
-// $workerIcons = array(
-//   "たかけん" => "./workericons/takakura.png",
-//   "いのうえ" => "./workericons/inoue.jpeg",
-//   "ふじた" => "./workericons/huzita.jpeg",
-//   "おりまー" => "./workericons/olimer.jpeg"
-// );
 
 $shiftDatPath = "./data/shift.dat";
 $workerDatPath = "./data/worker.dat";
@@ -16,16 +9,19 @@ $workerDatPath = "./data/worker.dat";
 $hours = 24;
 $oneWeekDays = 7;
 
-
+//新規の従業員登録のための情報が入力されてるか判定
 if(isset($_POST["newWorker"]) && !(empty($_POST["newWorker"])) && !(empty($_FILES["upfile"]["name"]))) {
 
   $newWorker = $_POST["newWorker"];
-
-
+  //画像ファイルをアップロード
   if(is_uploaded_file($_FILES["upfile"]["tmp_name"])) {
-    if(move_uploaded_file($_FILES["upfile"]["tmp_name"],$_FILES["upfile"]["name"])) {
-      chmod($_FILES["upfile"]["name"],0644);
+    if(move_uploaded_file($_FILES["upfile"]["tmp_name"],"./workericons/".$_FILES["upfile"]["name"])) {
+
+
+      chmod("./workericons/".$_FILES["upfile"]["name"],0644);
       echo $_FILES["upfile"]["name"]."をアップロードしました。";
+      
+
     } else {
       echo "ファイルをアップロードできません。";
     }
@@ -33,13 +29,12 @@ if(isset($_POST["newWorker"]) && !(empty($_POST["newWorker"])) && !(empty($_FILE
     echo "ファイルが選択されていません。";
   }
 
+  //登録した画像ファイルの変数を定義
   $upfile =$_FILES["upfile"]["name"];
-  //ファイルに書き込む指定
+  //投稿された名前と画像ファイルを従業員管理ファイルに書き込むための指定
   $workerIcons = $newWorker.",".$upfile;
 
-  var_dump($_POST["newWorker"]);
-  var_dump($_FILES["upfile"]);
-
+  //新規従業員を従業員管理ファイルに書き込む
   if(is_writable($workerDatPath) === false) {
     echo "not writable";
     exit;
@@ -53,58 +48,44 @@ if(isset($_POST["newWorker"]) && !(empty($_POST["newWorker"])) && !(empty($_FILE
     echo "could not write";
     exit;
   }
-
   fclose($filePointer);
 }
-
+//従業員管理ファイルを読み込む
 $workerData = file($workerDatPath);
 $newWorkerMax = count($workerData);
 
+//従業員管理ファイルを配列化
 for($i = 0; $i < $newWorkerMax; $i++) {
-  //$workerIcons[][0]=登録した従業員の名前
-  //$workerIcons[][1]=登録した従業員の画像
+  //$workerIcons[][0]登録した従業員の名前
+  //$workerIcons[][1]登録した従業員の画像
   $workerIcons[] = explode(",", $workerData[$i]);
 }
-echo "<img src='./workericons/{$workerIcons[0][1]}'>";
-//echo "<img src='./workericons/" . $workericons[0][1] . "'>";
 
-var_dump($workerIcons);
-
-
-
-
-
-
-
-
-
-
-
-
+//従業員シフト情報ファイルを読み込む
 $shiftTimes = file($shiftDatPath);
 $workerMax = count($shiftTimes);
 $workerName = $_POST["workerName"];
 
-//従業員情報を管理するファイルに、書き込まれた特定の従業員情報を削除
+//指定した従業員のシフト情報をファイルにから削除
 for($i = 0; $i < $workerMax; $i++) {
   if(strpos($shiftTimes[$i], $workerName) !== false) {
     unset($shiftTimes[$i]);
   }
 }
-
 //削除した配列を詰める
 $shiftTimes = array_merge($shiftTimes);
 
+//変更された、従業員シフト情報ファイルを配列化
 $workerMax = count($shiftTimes);
 for($i = 0; $i < $workerMax; $i++) {
   //$workerShifts[][0]名前
   //$workerShifts[][1]開始時間
   //$workerShifts[][2]終了時間
   //$workerShifts[][3]曜日
-  $workerShihts[] = explode(",", $shiftTimes[$i]);
+  $workerShifts[] = explode(",", $shiftTimes[$i]);
 }
 
-//従業員情報を、管理するファイルを空にして書き直す
+//従業員情報を管理するファイルを、空にして書き直す
 if(is_writable($shiftDatPath)  === false) {
   echo "not writable";
   exit;
@@ -123,14 +104,7 @@ for($i = 0; $i < $workerMax; $i++ ) {
 }
 fclose($filePointer);
 
-
-
 ?>
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang ='ja'>
@@ -170,16 +144,22 @@ fclose($filePointer);
               //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
               for($k = 0; $k < $workerMax; $k++) {
                 for($l = 0; $l <= $hours; $l++) {
-                  if($times[$l] == $workerShihts[$k][1]) {
-                    $starttime = $l;
+                  if($times[$l] == $workerShifts[$k][1]) {
+                    $startTime = $l;
                   }
-                  if($times[$l] == $workerShihts[$k][2]) {
-                    $endtime = $l;
+                  if($times[$l] == $workerShifts[$k][2]) {
+                    $endTime = $l;
                   }
                 }
                 //時間表示の１行に書き込まれないようにする
-                if($i > 0 && $j - 1 >= $starttime && $j - 1 <= $endtime && $workerShihts[$k][3][$i-1] == 1) {
-                   echo "<img src='{$workerIcons[$workerShihts[$k][0]]}'>\n";
+                if($i > 0 && $j - 1 >= $startTime && $j - 1 <= $endTime && $workerShifts[$k][3][$i-1] == 1) {
+                  // echo "<img src='{$workerIcons[$workerShihts[$k][0]]}'>\n";
+                  for($m = 0; $m < $newWorkerMax; $m++) {
+                    if($workerShifts[$k][0] == $workerIcons[$m][0]) {
+                      echo "<img src='./workericons/{$workerIcons[$m][1]}'>\n";
+                      //echo "<img src='./workericons/{$workerIcons[0][1]}'>";
+                    }
+                  }
                 }
               }
             ?>
@@ -199,12 +179,22 @@ fclose($filePointer);
   シフトを変更したい従業員を選択してください
   <br>
   <select name='workerName'>
-    <option value="従業員一覧">従業員</option>
-    <option value='たかけん'>たかけん</option>
-    <option value='いのうえ'>いのうえ</option>
-    <option value='ふじた'>ふじた</option>
-    <option value='おりまー'>おりまー</option>
+    <option value="従業員一覧">従業員</option>]
+
+    <?php
+
+    for ($i = 0; $i < $newWorkerMax; $i++){
+      echo "<option value='{$workerIcons[$i][0]}'>";
+      echo $workerIcons[$i][0];
+      echo "</option>";
+    }
+    ?>
+
+
+
   </select>
+
+
   <br>
   <p1><input type='submit' value='シフトを削除する'></p1>
   <br>

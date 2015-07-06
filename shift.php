@@ -177,6 +177,5 @@ fclose($filePointer);
     </select>
     <p><input class="pure-button pure-button-active" type='submit' name='push' value='作成する'></p>
   </form>
-
 </body>
 </html>
