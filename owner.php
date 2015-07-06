@@ -17,8 +17,12 @@ for($i = 0; $i < $workerMax; $i++) {
 $workerData   = file($workerDatPath);
 $newWorkerMax = count($workerData);
 //従業員管理ファイルを配列化
+$workerIcons = ["workerName" => "workerIcon"];
 for($i = 0; $i < $newWorkerMax; $i++) {
-  $workerIcons[] = explode(",", $workerData[$i]);
+  //$workerIcons[][0]登録した従業員の名前
+  //$workerIcons[][1]登録した従業員の画像
+  $workerIcon[] = explode(",", $workerData[$i]);
+  $workerIcons += [$workerIcon[$i][0] => $workerIcon[$i][1]];
 }
 
 //新規の従業員登録のための情報が入力されてるか判定
@@ -31,9 +35,11 @@ if(isset($_POST["newWorker"]) && !(empty($_POST["newWorker"])) && !(empty($_FILE
       echo $_FILES["upfile"]["name"]."をアップロードしました。";
     } else {
       echo "ファイルをアップロードできません。";
+      exit;
     }
   } else {
     echo "ファイルが選択されていません。";
+    exit;
   }
 
   //登録した画像ファイルの変数を定義
@@ -120,7 +126,7 @@ if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
     //週の曜日の７行+時間帯の表示の１行を表示させるため<=条件式とする
     for($i = 0; $i <= $oneWeekDays; $i++):
       //ここも3項演算子
-      $i == 0 ? print "<thead>" : print "<tbody>";
+      ($i == 0) ? print "<thead>" : print "<tbody>";
       ?>
       <tr>
         <?php
@@ -130,9 +136,9 @@ if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
           <td>
             <?php
             //表に時間と曜日を表示
-            if($j > 0 && $i == 0) {
+            if($i == 0 && $j > 0) {
               echo $times[$j-1];
-            } elseif ($j == 0 && $i > 0) {
+            } elseif ($i > 0 && $j == 0) {
               echo $weekJpNames[$i-1];
             } else {
               echo '　';
@@ -141,20 +147,16 @@ if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
             //表示するためにtime配列内のシフトの開始時間と終了時間の添え字を取り出す
             for($k = 0; $k < $workerMax; $k++) {
               for($l = 0; $l < $hours; $l++) {
-                if($times[$l] == $workerShifts[$k][1]) {
+                if($workerShifts[$k][1] == $times[$l]) {
                   $startTime = $l;
                 }
-                if($times[$l] == $workerShifts[$k][2]) {
+                if($workerShifts[$k][2] == $times[$l]) {
                   $endTime = $l;
                 }
               }
               //時間表示の１行に書き込まれないようにする
               if($i > 0 && $workerShifts[$k][3][$i-1] == 1 && $j - 1 >= $startTime && $j - 1 <= $endTime) {
-                for($m = 0; $m < $newWorkerMax; $m++) {
-                  if($workerShifts[$k][0] == $workerIcons[$m][0]) {
-                    echo "<img src='./pictures/{$workerIcons[$m][1]}'>\n";
-                  }
-                }
+                echo "<img src='./pictures/".$workerIcons[$workerShifts[$k][0]]."'>\n";
               }
             }
             ?>
@@ -164,7 +166,7 @@ if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
     <?php endfor; ?>
     <?php
     //閉じタグも3項演算子
-    $i == 0 ? print "</thead>" : "</tbody>";
+    ($i == 0) ? print "</thead>" : "</tbody>";
     ?>
   </table>
   <form action='' method='post' enctype="multipart/form-data">
@@ -173,22 +175,29 @@ if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
       <select name='workerName'>
         <option value="従業員一覧">従業員</option>
         <?php
-        for ($i = 0; $i < $newWorkerMax; $i++){
-          echo "<option value='{$workerIcons[$i][0]}'>".$workerIcons[$i][0]."</option>";
+        // for($i = 0; $i < $workerMax; $i++) {
+        //   echo "<option value='{$workerIcons[$workerShifts[$i][0]]}'>".$workerIcons[$workerShifts[$i][0]]."</option>";
+        // }
+        for($i = 0; $i < $newWorkerMax; $i++) {
+          echo "<option value='{$workerIcon[$i][0]}'>".$workerIcon[$i][0]."</option>";
         }
+
         ?>
       </select>
-      <p><input type='submit' value='シフトをリセットする。'></p>
+      <p><input type='submit' value='シフトをリセットする'></p>
     </div>
     追加したい従業員を登録できます。
     <br>
-    <p>名前<input type='text' value='' name='newWorker'></p>
-    <p><input type="file" name="upfile"><p>
-      <p><input type='submit' value='登録する'></p>
-      <br>
-      <a href="host.php">完成したシフトはこちら</a>
-      <a href="shift.php">シフト登録はこちら</a>
-    </form>
+    <p>
+    名前
+    <input type='text' value='' name='newWorker'>
+    <input type="file" name="upfile">
+    </p>
+    <p><input type='submit' value='登録する'></p>
     <br>
+    <a href="host.php">完成したシフトはこちら</a>
+    <a href="shift.php">シフト登録はこちら</a>
+  </form>
+  <br>
   </body>
-  </html>
+</html>

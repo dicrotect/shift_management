@@ -8,32 +8,35 @@ $oneWeekDays   = 7;
 $hours         = 24;
 $shiftFlag     = 1;
 
-$shiftTime = $_POST["workerName"].",".$_POST["start"].",".$_POST["end"].",";
-//ファイルに書き込む形式に曜日情報を結合
-//ほぼ同じなので$oneWeekDaysに書き込むforループと統合しました。
-for($i = 0; $i < $oneWeekDays; $i++) {
-  //以下の１行が3項演算子です。このぐらいなら1行でかけるから使った方がいいかも。
-  (isset($_POST['c'.($i+1)])) ? $oneWeek[$i] = $sfiftFlag : $oneWeek[$i];
-  $shiftTime = $shiftTime.$oneWeek[$i];
-}
-//従業員情報を、管理するファイルに追記
-if(is_writable($shiftDatPath) === false) {
-  echo "not writable";
-  exit;
-}
 
-$filePointer = fopen($shiftDatPath, "a");
-if($filePointer === false) {
-  echo "could not open";
-  exit;
-}
+if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
+  $shiftTime = $_POST["workerName"].",".$_POST["start"].",".$_POST["end"].",";
+  //ファイルに書き込む形式に曜日情報を結合
+  //ほぼ同じなので$oneWeekDaysに書き込むforループと統合しました。
+  for($i = 0; $i < $oneWeekDays; $i++) {
+    //以下の１行が3項演算子です。このぐらいなら1行でかけるから使った方がいいかも。
+    isset($_POST['c'.($i+1)]) ? $oneWeek[$i] = $shiftFlag : $oneWeek[$i];
+    $shiftTime = $shiftTime.$oneWeek[$i];
+  }
+  //従業員情報を、管理するファイルに追記
+  if(is_writable($shiftDatPath) === false) {
+    echo "not writable";
+    exit;
+  }
 
-if(fwrite($filePointer, $shiftTime."\n") === false) {
-  echo "could not write";
-  exit;
-}
+  $filePointer = fopen($shiftDatPath, "a");
+  if($filePointer === false) {
+    echo "could not open";
+    exit;
+  }
 
-fclose($filePointer);
+  if(fwrite($filePointer, $shiftTime."\n") === false) {
+    echo "could not write";
+    exit;
+  }
+
+  fclose($filePointer);
+}
 ?>
 
 <!DOCTYPE html>
@@ -73,16 +76,17 @@ fclose($filePointer);
               if($times[$k] == $_POST['start']) {
                 $startTime = $k;
               }
-              
+
               if($times[$k] == $_POST['end']) {
                 $endTime = $k;
               }
+            }
               //開始時間から終了時間とシフトに入る曜日に◯を出力
               //同じ変数を先に評価してからの方が良いので順番を変更しました。
               if($i > 0 && $i == $_POST['c'.$i] && $j - 1 >= $startTime && $j - 1 <= $endTime) {
                 echo '◯';
               }
-            }
+
             ?>
           </td>
         <?php endfor; ?>
@@ -109,6 +113,7 @@ fclose($filePointer);
       ?>
     </select>
     <br>
+    <br>
     希望の曜日は？
     <div>
       <input type='checkbox' name='c1' value='1'>Mon
@@ -119,60 +124,63 @@ fclose($filePointer);
       <input type='checkbox' name='c6' value='6'>Sat
       <input type='checkbox' name='c7' value='7'>Sun
     </div>
-    何時から働きますか？
-    <select name='start'>
-      <option value='6'>6</option>
-      <option value='7'>7</option>
-      <option value='8'>8</option>
-      <option value='9'>9</option>
-      <option value='10'>10</option>
-      <option value='11'>11</option>
-      <option value='12'>12</option>
-      <option value='13'>13</option>
-      <option value='14'>14</option>
-      <option value='15'>15</option>
-      <option value='16'>16</option>
-      <option value='17'>17</option>
-      <option value='18'>18</option>
-      <option value='19'>19</option>
-      <option value='20'>20</option>
-      <option value='21'>21</option>
-      <option value='22'>22</option>
-      <option value='23'>23</option>
-      <option value='24'>24</option>
-      <option value='1'>1</option>
-      <option value='2'>2</option>
-      <option value='3'>3</option>
-      <option value='4'>4</option>
-      <option value='5'>5</option>
-    </select>
-    何時まで働きますか？
-    <select name='end'>
-      <option value='6'>6</option>
-      <option value='7'>7</option>
-      <option value='8'>8</option>
-      <option value='9'>9</option>
-      <option value='10'>10</option>
-      <option value='11'>11</option>
-      <option value='12'>12</option>
-      <option value='13'>13</option>
-      <option value='14'>14</option>
-      <option value='15'>15</option>
-      <option value='16'>16</option>
-      <option value='17'>17</option>
-      <option value='18'>18</option>
-      <option value='19'>19</option>
-      <option value='20'>20</option>
-      <option value='21'>21</option>
-      <option value='22'>22</option>
-      <option value='23'>23</option>
-      <option value='24'>24</option>
-      <option value='1'>1</option>
-      <option value='2'>2</option>
-      <option value='3'>3</option>
-      <option value='4'>4</option>
-      <option value='5'>5</option>
-    </select>
+    <br>
+    <div>
+      何時から働きますか？
+      <select name='start'>
+        <option value='6'>6</option>
+        <option value='7'>7</option>
+        <option value='8'>8</option>
+        <option value='9'>9</option>
+        <option value='10'>10</option>
+        <option value='11'>11</option>
+        <option value='12'>12</option>
+        <option value='13'>13</option>
+        <option value='14'>14</option>
+        <option value='15'>15</option>
+        <option value='16'>16</option>
+        <option value='17'>17</option>
+        <option value='18'>18</option>
+        <option value='19'>19</option>
+        <option value='20'>20</option>
+        <option value='21'>21</option>
+        <option value='22'>22</option>
+        <option value='23'>23</option>
+        <option value='24'>24</option>
+        <option value='1'>1</option>
+        <option value='2'>2</option>
+        <option value='3'>3</option>
+        <option value='4'>4</option>
+        <option value='5'>5</option>
+      </select>
+      何時まで働きますか？
+      <select name='end'>
+        <option value='6'>6</option>
+        <option value='7'>7</option>
+        <option value='8'>8</option>
+        <option value='9'>9</option>
+        <option value='10'>10</option>
+        <option value='11'>11</option>
+        <option value='12'>12</option>
+        <option value='13'>13</option>
+        <option value='14'>14</option>
+        <option value='15'>15</option>
+        <option value='16'>16</option>
+        <option value='17'>17</option>
+        <option value='18'>18</option>
+        <option value='19'>19</option>
+        <option value='20'>20</option>
+        <option value='21'>21</option>
+        <option value='22'>22</option>
+        <option value='23'>23</option>
+        <option value='24'>24</option>
+        <option value='1'>1</option>
+        <option value='2'>2</option>
+        <option value='3'>3</option>
+        <option value='4'>4</option>
+        <option value='5'>5</option>
+      </select>
+    </div>
     <p><input type='submit' name='push' value='作成する'></p>
     <a href="host.php">完成したシフトはこちら</a>
     <a href="owner.php">シフト修正はこちら</a>
