@@ -5,6 +5,7 @@ $oneWeek       = array(0, 0, 0, 0, 0, 0, 0);
 $workerDatPath = "./data/worker.dat";
 $oneWeekDays   = 7;
 $hours         = 24;
+$shiftFlag     = 1;
 
 //厳密にした方が良いのでissetとemptyで入力のないときは処理を行わないようにします。
 //(表示はされないけどエラーがおきている可能性がある)
@@ -17,7 +18,7 @@ if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
   //ほぼ同じなので$oneWeekDaysに書き込むforループと統合しました。
   for($i = 0; $i < $oneWeekDays; $i++) {
     //以下の１行が3項演算子です。このぐらいなら1行でかけるから使った方がいいかも。
-    $oneWeek[$i] = isset($_POST['c'.($i+1)]) ? 1 : 0;
+    (isset($_POST['c'.($i+1)])) ? $oneWeek[$i] = $sfiftFlag : $oneWeek[$i];
     $shiftTime = $shiftTime.$oneWeek[$i];
   }
   //従業員情報を、管理するファイルに追記
@@ -55,7 +56,7 @@ if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
     //週の曜日の７行+時間帯の表示の１行を表示させるため<=条件式とする
     for($i = 0; $i <= $oneWeekDays; $i++):
       //ここも3項演算子
-      $i == 0 ? print "<thead>" : print "<tbody>";
+      ($i == 0) ? print "<thead>" : print "<tbody>";
     ?>
       <tr>
         <?php
@@ -67,7 +68,7 @@ if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
             //表に曜日と時間を表示
             if($j > 0 && $i == 0) {
               echo $times[$j-1];
-            } elseif ($j == 0 && $i > 0) {
+            } elseif($j == 0 && $i > 0) {
               echo $weekJpNames[$i-1];
             } else {
               echo '　';
@@ -97,7 +98,7 @@ if(isset($_POST["workerName"]) && !(empty($_POST["workerName"]))) {
     <?php endfor; ?>
     <?php
     //閉じタグも3項演算子
-    $i == 0 ? print "</thead>" : "</tbody>";
+    ($i == 0) ? print "</thead>" : "</tbody>";
     ?>
   </table>
   <form action='' method='post'>
